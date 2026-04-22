@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Casino Rey VIP</title>
-    <!-- Firebase SDK -->
+    <!-- Librerías de Firebase -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
     <style>
@@ -17,7 +17,8 @@
         .ruleta-externa { position: relative; width: 480px; height: 480px; background: radial-gradient(circle, #f9f295 0%, #d4af37 50%, #b38b2d 100%); border-radius: 50%; padding: 10px; box-shadow: 0 40px 80px rgba(0,0,0,0.8); z-index: 10; }
         #wheel { width: 100%; height: 100%; transition: transform 6s cubic-bezier(0.1, 0, 0.1, 1); border-radius: 50%; }
         .puntero { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); width: 60px; z-index: 1000; pointer-events: none; }
-        .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: #000; border: 4px solid var(--gold); border-radius: 50%; color: gold; font-size: 18px; font-weight: 900; cursor: pointer; z-index: 2000; box-shadow: 0 0 30px gold; }
+        /* EL BOTÓN AHORA ESTÁ POR ENCIMA DE TODO */
+        .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: #000; border: 4px solid var(--gold); border-radius: 50%; color: gold; font-size: 18px; font-weight: 900; cursor: pointer; z-index: 2000 !important; box-shadow: 0 0 30px gold; }
         .texto-premio { fill: white; font-size: 5.2px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #000; stroke-width: 1px; }
         .ticket { position: absolute; bottom: 80px; width: 300px; background: #fff; color: #111; padding: 20px; border-radius: 15px; text-align: center; border-bottom: 10px solid var(--gold); box-shadow: 0 40px 80px rgba(0,0,0,0.9); display: none; z-index: 3000; }
     </style>
@@ -92,12 +93,10 @@
                     await db.collection("jugadores").add({
                         premio: winner, id: code, fecha: new Date().toISOString()
                     });
-                } catch(e) { console.log("Firebase Error"); }
+                } catch(e) { console.log("Error al guardar"); }
                 girando = false;
             }, 6200);
         };
     </script>
-</body>
-</html>
 </body>
 </html>
