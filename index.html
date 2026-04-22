@@ -3,27 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casino Rey VIP - Sistema Blindado</title>
-    <!-- Firebase SDK v8 (Versiones de máxima compatibilidad) -->
+    <title>Casino Rey VIP - Premium Edition</title>
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
     <style>
         @import url('https://googleapis.com');
         :root { --gold: #d4af37; --violeta: #8a2be2; --naranja: #ff8c00; --amarillo: #ffd700; --azul: #1e90ff; }
+        
         body { margin: 0; padding: 0; height: 100vh; display: flex; justify-content: center; align-items: center; background: #111 url('fondo.jpg') no-repeat center center fixed; background-size: cover; font-family: 'Montserrat', sans-serif; overflow: hidden; }
+        
         .escena { position: relative; width: 100%; max-width: 900px; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        
         .personaje { position: absolute; bottom: 0; left: -50px; width: 380px; z-index: 100; pointer-events: none; filter: drop-shadow(20px 10px 30px rgba(0,0,0,0.9)); }
-        .logo-leon { position: absolute; bottom: 20px; right: 20px; width: 90px; height: 90px; z-index: 101; border: 2px solid var(--gold); border-radius: 50%; background: black; object-fit: contain; aspect-ratio: 1/1; }
+        
+        .logo-leon { position: absolute; bottom: 20px; right: 40px; width: 100px; height: 100px; z-index: 101; border: 3px solid var(--gold); border-radius: 50%; background: black; object-fit: contain; aspect-ratio: 1/1; }
+
         .ruleta-externa { position: relative; width: 550px; height: 550px; background: radial-gradient(circle, #f9f295 0%, #d4af37 50%, #b38b2d 100%); border-radius: 50%; padding: 12px; box-shadow: 0 40px 80px rgba(0,0,0,0.8); z-index: 10; margin-top: -50px; }
-        #wheel { width: 100%; height: 100%; transition: transform 6s cubic-bezier(0.1, 0, 0.1, 1); border-radius: 50%; }
+        
+        #wheel { width: 100%; height: 100%; transition: transform 6s cubic-bezier(0.15, 0, 0.15, 1); border-radius: 50%; }
+        
         .puntero { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 65px; z-index: 1000; pointer-events: none; }
         
-        /* BOTÓN CON PRIORIDAD TOTAL */
-        .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 110px; height: 110px; background: #000; border: 5px solid var(--gold); border-radius: 50%; color: gold; font-size: 18px; font-weight: 900; cursor: pointer; z-index: 5000 !important; box-shadow: 0 0 30px gold; }
-        .btn-giro:disabled { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
+        .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 110px; height: 110px; background: #000; border: 5px solid var(--gold); border-radius: 50%; color: gold; font-size: 18px; font-weight: 900; cursor: pointer; z-index: 2000 !important; box-shadow: 0 0 30px gold; }
+        .btn-giro:disabled { opacity: 0.5; filter: grayscale(1); }
 
         .texto-premio { fill: white; font-size: 5.2px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #000; stroke-width: 1px; }
-        .ticket { position: absolute; bottom: 40px; width: 350px; background: rgba(255, 255, 255, 0.98); color: #111; padding: 25px; border-radius: 20px; text-align: center; border: 4px solid var(--gold); box-shadow: 0 20px 50px rgba(0,0,0,0.9); display: none; z-index: 6000; }
+
+        /* TICKET PREMIUM CON ESTRELLAS Y BORDE DORADO */
+        .ticket { 
+            position: absolute; bottom: 40px; width: 360px; 
+            background: white url('https://transparenttextures.com'); 
+            color: #111; padding: 25px; border-radius: 20px; text-align: center; 
+            border: 5px solid var(--gold); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 15px rgba(212,175,55,0.2); 
+            display: none; z-index: 3000; 
+        }
+        .ticket h2 { margin: 0; font-size: 55px; color: #111; text-shadow: 1px 1px 2px rgba(212,175,55,0.5); }
+        .ticket p { margin: 10px 0; font-size: 20px; font-weight: bold; border-top: 1px dashed var(--gold); padding-top: 10px; }
     </style>
 </head>
 <body>
@@ -34,8 +50,23 @@
             <svg class="puntero" viewBox="0 0 100 100"><path d="M50 100 L100 0 L0 0 Z" fill="#fff" /></svg>
             <div id="wheel">
                 <svg viewBox="0 0 100 100">
-                    <path d="M50 50 L100 50 A50 50 0 0 1 85.3 85.3 Z" fill="var(--violeta)" /><path d="M50 50 L85.3 85.3 A50 50 0 0 1 50 100 Z" fill="var(--naranja)" /><path d="M50 50 L50 100 A50 50 0 0 1 14.7 85.3 Z" fill="var(--amarillo)" /><path d="M50 50 L14.7 85.3 A50 50 0 0 1 0 50 Z" fill="var(--azul)" /><path d="M50 50 L0 50 A50 50 0 0 1 14.7 14.7 Z" fill="var(--violeta)" /><path d="M50 50 L14.7 14.7 A50 50 0 0 1 50 0 Z" fill="var(--naranja)" /><path d="M50 50 L50 0 A50 50 0 0 1 85.3 14.7 Z" fill="var(--amarillo)" /><path d="M50 50 L85.3 14.7 A50 50 0 0 1 100 50 Z" fill="var(--azul)" />
-                    <text x="77" y="68" class="texto-premio" transform="rotate(22.5, 77, 68)">500</text><text x="58" y="81" class="texto-premio" transform="rotate(67.5, 58, 81)">10%</text><text x="31" y="81" class="texto-premio" transform="rotate(112.5, 31, 81)">$1000</text><text x="14" y="68" class="texto-premio" transform="rotate(157.5, 14, 68)">15%</text><text x="23" y="32" class="texto-premio" transform="rotate(202.5, 23, 32)">500</text><text x="42" y="19" class="texto-premio" transform="rotate(247.5, 42, 19)">10%</text><text x="69" y="19" class="texto-premio" transform="rotate(292.5, 69, 19)">$2000</text><text x="86" y="32" class="texto-premio" transform="rotate(337.5, 86, 32)">20%</text>
+                    <path d="M50 50 L100 50 A50 50 0 0 1 85.3 85.3 Z" fill="var(--violeta)" />
+                    <path d="M50 50 L85.3 85.3 A50 50 0 0 1 50 100 Z" fill="var(--naranja)" />
+                    <path d="M50 50 L50 100 A50 50 0 0 1 14.7 85.3 Z" fill="var(--amarillo)" />
+                    <path d="M50 50 L14.7 85.3 A50 50 0 0 1 0 50 Z" fill="var(--azul)" />
+                    <path d="M50 50 L0 50 A50 50 0 0 1 14.7 14.7 Z" fill="var(--violeta)" />
+                    <path d="M50 50 L14.7 14.7 A50 50 0 0 1 50 0 Z" fill="var(--naranja)" />
+                    <path d="M50 50 L50 0 A50 50 0 0 1 85.3 14.7 Z" fill="var(--amarillo)" />
+                    <path d="M50 50 L85.3 14.7 A50 50 0 0 1 100 50 Z" fill="var(--azul)" />
+                    
+                    <text x="77" y="68" class="texto-premio" transform="rotate(22.5, 77, 68)">$500</text>
+                    <text x="58" y="81" class="texto-premio" transform="rotate(67.5, 58, 81)">10%</text>
+                    <text x="31" y="81" class="texto-premio" transform="rotate(112.5, 31, 81)">$1000</text>
+                    <text x="14" y="68" class="texto-premio" transform="rotate(157.5, 14, 68)">15%</text>
+                    <text x="23" y="32" class="texto-premio" transform="rotate(202.5, 23, 32)">$500</text>
+                    <text x="42" y="19" class="texto-premio" transform="rotate(247.5, 42, 19)">10%</text>
+                    <text x="69" y="19" class="texto-premio" transform="rotate(292.5, 69, 19)">$2000</text>
+                    <text x="86" y="32" class="texto-premio" transform="rotate(337.5, 86, 32)">20%</text>
                 </svg>
             </div>
             <button class="btn-giro" id="btnFinal">GIRAR</button>
@@ -48,7 +79,6 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN PROYECTO: ruleta-rey-v2
         const firebaseConfig = {
             apiKey: "AIzaSyB3CWqVqfX3fW7EOk_uqwZCkbowHZSdRFs",
             authDomain: "://firebaseapp.com",
@@ -57,77 +87,55 @@
             messagingSenderId: "925607172632",
             appId: "1:925607172632:web:7f4b59dc96637c3aed416d"
         };
-
-        // Inicialización segura
-        let db;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
-        } catch (e) {
-            console.error("Firebase no se pudo inicializar.");
-        }
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
         const btn = document.getElementById('btnFinal');
-        const wheel = document.getElementById('wheel');
-        const prizes = ["500", "10%", "$1000", "15%", "500", "10%", "$2000", "20%"];
+        // Lista de premios en orden ANTI-HORARIO para sincronizar con la rotación
+        const prizes = ["20%", "$2000", "10%", "$500", "15%", "$1000", "10%", "$500"];
         let rot = 0;
 
-        // Versión de seguridad para bloquear el navegador
-        const VERSION = "REINTENTO_FINAL_V1"; 
+        // CAMBIA ESTO PARA PODER VOLVER A GIRAR TÚ MISMO
+        const VERSION = "V11_REVISION"; 
 
         if (localStorage.getItem(VERSION)) {
             btn.disabled = true;
             btn.innerText = "USADO";
         }
 
-        // FUNCIÓN PRINCIPAL DE GIRO (Independiente de Firebase para evitar bloqueos)
-        btn.addEventListener('click', function() {
+        btn.onclick = function() {
             if (localStorage.getItem(VERSION)) return;
-            
-            console.log("Botón presionado correctamente");
-            
-            // 1. ARRANCAR ANIMACIÓN AL INSTANTE
             btn.disabled = true;
-            const winner = prizes[Math.floor(Math.random() * prizes.length)];
-            const index = prizes.indexOf(winner);
             
-            rot += (360 * 10) + (360 - (45 * index));
-            wheel.style.transform = "rotate(" + rot + "deg)";
+            // Elección aleatoria
+            const winnerIndex = Math.floor(Math.random() * prizes.length);
+            const winner = prizes[winnerIndex];
             
-            // 2. BLOQUEAR NAVEGADOR
+            // Cálculo: Vueltas + Ángulo del segmento
+            // Cada segmento son 45 grados. El índice 0 es 20%, que está arriba.
+            rot += (360 * 10) + (winnerIndex * 45);
+            document.getElementById('wheel').style.transform = `rotate(${rot}deg)`;
             localStorage.setItem(VERSION, 'true');
 
-            // 3. PROCESAR FIREBASE EN SEGUNDO PLANO
-            setTimeout(async function() {
-                let finalID = Math.floor(Math.random() * 900); // ID de respaldo por si falla la red
+            setTimeout(async () => {
+                let finalID = "0000";
+                try {
+                    const counterRef = db.collection('config').doc('counter');
+                    finalID = await db.runTransaction(async (t) => {
+                        const d = await t.get(counterRef);
+                        const nv = (d.exists ? d.data().value : 0) + 1;
+                        t.set(counterRef, { value: nv });
+                        return nv;
+                    });
+                    await db.collection("jugadores").add({ premio: winner, idCupon: finalID, fecha: new Date().toISOString() });
+                } catch(e) { finalID = Math.floor(Math.random() * 999); }
 
-                if (db) {
-                    try {
-                        const counterRef = db.collection('config').doc('counter');
-                        finalID = await db.runTransaction(async (t) => {
-                            const d = await t.get(counterRef);
-                            const nv = (d.exists ? d.data().value : 0) + 1;
-                            t.set(counterRef, { value: nv });
-                            return nv;
-                        });
-                        
-                        await db.collection("jugadores").add({
-                            premio: winner,
-                            idCupon: finalID,
-                            fecha: new Date().toISOString()
-                        });
-                    } catch(e) {
-                        console.error("Error al guardar en Firebase:", e);
-                    }
-                }
-
-                // 4. MOSTRAR TICKET
                 document.getElementById('p-valor').innerText = winner;
                 document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
                 document.getElementById('p-fecha').innerText = new Date().toLocaleString();
                 document.getElementById('ticket').style.display = "block";
             }, 6200);
-        });
+        };
     </script>
 </body>
 </html>
