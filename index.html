@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Casino Rey VIP - Sincronizado</title>
     
-    <!-- Scripts estables v8 -->
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
+    <!-- ESPECIFICACIONES MANTENIDAS: NO EDITAR -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
         @import url('https://googleapis.com');
@@ -17,13 +17,13 @@
         
         .escena { position: relative; width: 100%; max-width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* PERSONAJE */
-        .personaje { position: absolute; bottom: 0; left: -50px; width: 420px; z-index: 100; pointer-events: none; filter: drop-shadow(15px 10px 25px rgba(0,0,0,0.9)); }
+        /* PERSONAJE: Más grande y color sólido */
+        .personaje { position: absolute; bottom: 0; left: -60px; width: 450px; z-index: 100; opacity: 1 !important; pointer-events: none; filter: drop-shadow(15px 10px 25px rgba(0,0,0,0.9)); }
         
-        /* LOGO: Elevado */
-        .logo-leon { position: absolute; bottom: 120px; right: 20px; width: 100px; height: 100px; z-index: 101; border: 4px solid var(--gold); border-radius: 50%; background: black; object-fit: contain; }
+        /* LOGO: Más arriba y más grande */
+        .logo-leon { position: absolute; bottom: 150px; right: 20px; width: 110px; height: 110px; z-index: 101; border: 4px solid var(--gold); border-radius: 50%; background: black; object-fit: contain; aspect-ratio: 1/1; box-shadow: 0 0 25px rgba(212,175,55,0.5); }
 
-        /* RULETA */
+        /* RULETA: Posicionada para que el ticket no la tape abajo */
         .ruleta-externa { 
             position: relative; 
             width: min(92vw, 550px); 
@@ -31,41 +31,48 @@
             background: radial-gradient(circle, #f9f295 0%, #d4af37 50%, #b38b2d 100%); 
             border-radius: 50%; padding: 10px; 
             box-shadow: 0 30px 70px rgba(0,0,0,0.9); 
-            z-index: 10; margin-top: -120px; 
+            z-index: 10; margin-top: -180px; 
         }
         
         #wheel { width: 100%; height: 100%; transition: transform 6s cubic-bezier(0.15, 0, 0.15, 1); border-radius: 50%; }
         .puntero { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 60px; z-index: 1000; pointer-events: none; }
+        
         .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: #000; border: 5px solid var(--gold); border-radius: 50%; color: gold; font-size: 16px; font-weight: 900; cursor: pointer; z-index: 9999 !important; box-shadow: 0 0 30px gold; }
         .btn-giro:disabled { opacity: 0.5; filter: grayscale(1); }
 
         .texto-premio { fill: white; font-size: 5.2px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #000; stroke-width: 1.2px; }
 
-        /* CUPÓN: Ahora más arriba y con diseño de monedas/estrellas */
+        /* TICKET: Centrado sobre la ruleta con fondo de monedas y estrellas */
         .ticket { 
             position: absolute; 
-            top: 55%; /* Centrado a la altura de la ruleta */
+            top: 45%; 
             left: 50%;
             transform: translate(-50%, -50%);
             width: 90%; 
             max-width: 380px; 
-            background: white url('https://ibb.co'); /* Pattern simulado */
-            background-size: 150px;
+            background: white url('https://transparenttextures.com');
             background-color: #fff;
             color: #111; padding: 25px; border-radius: 20px; text-align: center; 
-            border: 6px solid var(--gold); 
-            box-shadow: 0 0 0 1000px rgba(0,0,0,0.7), 0 30px 80px rgba(0,0,0,1); /* Oscurece el fondo */
+            border: 8px solid var(--gold); 
+            box-shadow: 0 0 0 2000px rgba(0,0,0,0.8), 0 30px 100px rgba(0,0,0,1); 
             display: none; z-index: 99999; 
+            animation: bounceIn 0.6s ease-out;
         }
-        
-        .ticket::before { content: "⭐ 💰 ⭐"; display: block; font-size: 20px; margin-bottom: 10px; }
 
-        /* AJUSTES CELULAR */
+        @keyframes bounceIn {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            70% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .ticket h3 { margin: 0; color: #d4af37; font-size: 24px; }
+        .ticket h2 { margin: 10px 0; font-size: 55px; color: #111; }
+        .ticket p { font-size: 20px; font-weight: bold; margin: 5px 0; }
+
         @media (max-width: 480px) {
-            .personaje { width: 300px; left: -30px; }
-            .ruleta-externa { margin-top: -180px; }
-            .logo-leon { bottom: 150px; right: 15px; width: 90px; height: 90px; }
-            .ticket { top: 50%; width: 85%; }
+            .personaje { width: 320px; left: -40px; }
+            .ruleta-externa { margin-top: -240px; }
+            .logo-leon { bottom: 120px; width: 90px; height: 90px; }
         }
     </style>
 </head>
@@ -77,6 +84,7 @@
             <svg class="puntero" viewBox="0 0 100 100"><path d="M50 100 L100 0 L0 0 Z" fill="#fff" /></svg>
             <div id="wheel">
                 <svg viewBox="0 0 100 100">
+                    <!-- Segmentos -->
                     <path d="M50 50 L50 0 A50 50 0 0 1 85.3 14.7 Z" fill="var(--naranja)" />
                     <path d="M50 50 L85.3 14.7 A50 50 0 0 1 100 50 Z" fill="var(--amarillo)" />
                     <path d="M50 50 L100 50 A50 50 0 0 1 85.3 85.3 Z" fill="var(--azul)" />
@@ -86,7 +94,6 @@
                     <path d="M50 50 L0 50 A50 50 0 0 1 14.7 14.7 Z" fill="var(--azul)" />
                     <path d="M50 50 L14.7 14.7 A50 50 0 0 1 50 0 Z" fill="var(--violeta)" />
                     
-                    <!-- Premios mapeados exactamente con el Array JS -->
                     <text x="68" y="18" class="texto-premio" transform="rotate(22.5, 68, 18)">10%</text>
                     <text x="88" y="38" class="texto-premio" transform="rotate(67.5, 88, 38)">$1000</text>
                     <text x="88" y="65" class="texto-premio" transform="rotate(112.5, 88, 65)">15%</text>
@@ -99,32 +106,36 @@
             </div>
             <button class="btn-giro" id="btnFinal" onclick="girarRuleta()">GIRAR</button>
         </div>
+        
         <div id="ticket" class="ticket">
+            <h3>⭐ ¡FELICIDADES! 💰</h3>
             <h2 id="p-valor">---</h2>
-            <p style="font-size: 20px; color: #d4af37;">💰 PREMIO VIP 💰</p>
             <p>ID CUPÓN: #<span id="p-id">0000</span></p>
             <small id="p-fecha"></small>
-            <button onclick="location.reload()" style="margin-top:15px; padding:10px; background:var(--gold); border:none; border-radius:10px; font-weight:bold; cursor:pointer;">CERRAR</button>
+            <br>
+            <button onclick="location.reload()" style="margin-top:20px; padding:12px 30px; background:var(--gold); border:none; border-radius:15px; font-weight:900; color:#000; cursor:pointer; font-size:16px;">COBRAR PREMIO</button>
         </div>
     </div>
 
     <script>
+        // CONFIGURACIÓN MANTENIDA: NO EDITAR authDomain
         const firebaseConfig = {
             apiKey: "AIzaSyB3CWqVqfX3fW7EOk_uqwZCkbowHZSdRFs",
-            authDomain: "://firebaseapp.com",
+            authDomain: "ruleta-rey-v2.firebaseapp.com",
             projectId: "ruleta-rey-v2",
             storageBucket: "ruleta-rey-v2.firebasestorage.app",
             messagingSenderId: "925607172632",
             appId: "1:925607172632:web:7f4b59dc96637c3aed416d"
         };
+        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // LISTA DE PREMIOS SINCRONIZADA CON EL SVG (Empieza desde el de arriba a la derecha)
+        // LISTA DE PREMIOS SINCRONIZADA CON POSICIÓN 0 = 12 EN PUNTO
         const prizes = ["10%", "$1000", "15%", "$500", "20%", "$2000", "10%", "$500"];
-        let totalRot = 0;
+        let currentRotation = 0;
 
-        const VERSION = "REINTENTO_V5_STARS"; 
+        const VERSION = "FINAL_V25_STARS"; 
         if (localStorage.getItem(VERSION)) {
             document.getElementById('btnFinal').disabled = true;
             document.getElementById('btnFinal').innerText = "USADO";
@@ -137,16 +148,15 @@
             const winnerIndex = Math.floor(Math.random() * prizes.length);
             const winnerValue = prizes[winnerIndex];
 
-            // CÁLCULO DE ROTACIÓN PARA QUE CAIGA EN LA FLECHA (ARRIBA)
+            // Cálculo para que caiga exactamente bajo la flecha blanca
             const vueltas = 10;
-            const degPorCuña = 360 / prizes.length; // 45deg
-            const centroCuña = degPorCuña / 2;
+            const degPorSlice = 45;
+            const centroSlice = degPorSlice / 2;
             
-            // Calculamos cuánto rotar para que el winnerIndex quede arriba (0°)
-            // La fórmula es: (Vueltas) - (Posición del premio) - (Centro de la cuña)
-            totalRot += (vueltas * 360) - (winnerIndex * degPorCuña) - centroCuña;
+            // Rotación horaria ajustada al centro de la cuña elegida
+            currentRotation += (vueltas * 360) - (winnerIndex * degPorSlice) - centroSlice;
             
-            document.getElementById('wheel').style.transform = `rotate(${totalRot}deg)`;
+            document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
             localStorage.setItem(VERSION, 'true');
 
             setTimeout(async () => {
