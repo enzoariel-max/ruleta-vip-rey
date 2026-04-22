@@ -107,7 +107,7 @@
         const prizes = ["10%", "$1000", "15%", "$500", "20%", "$2000", "10%", "$500"];
         let currentRotation = 0;
 
-        const VERSION = "VERSION 22/4/2026"; 
+        const VERSION = "VERSION 22/4/2026/01"; 
         if (localStorage.getItem(VERSION)) {
             document.getElementById('btnFinal').disabled = true;
             document.getElementById('btnFinal').innerText = "USADO";
@@ -144,22 +144,21 @@
         }
 
 function enviarWhatsApp() {
-    // Tu número de Argentina configurado
     var numero = "5491124050658"; 
     
-    // Obtenemos los datos del premio
     var valorPremio = document.getElementById('p-valor').innerText;
     var idCupon = document.getElementById('p-id').innerText;
     
-    // Armamos el mensaje
-    var texto = "¡Hola! Gané en la Ruleta VIP 🎰%0A%0A🏆 *Premio:* " + valorPremio + "%0A🎫 *Cupón:* #" + idCupon + "%0A%0AQuiero cobrarlo.";
+    var texto = `¡Hola! Gané en la Ruleta VIP 🎰
+
+🏆 Premio: ${valorPremio}
+🎫 Cupón: #${idCupon}
+
+Quiero cobrarlo.`;
+
+    var urlFinal = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
     
-    // Construimos el link final
-    var urlFinal = "https://wa.me" + numero + "?text=" + texto;
-    
-    // Abrimos WhatsApp
     window.open(urlFinal, '_blank');
-}
     </script>
 </body>
 </html>
