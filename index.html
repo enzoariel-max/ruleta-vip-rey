@@ -143,13 +143,23 @@
             }, 6200);
         }
 
-        function enviarWhatsApp() {
-            const numeroTel = "5491124050658"; // <--- CAMBIA ESTO POR TU NÚMERO
-            const premio = document.getElementById('p-valor').innerText;
-            const id = document.getElementById('p-id').innerText;
-            const mensaje = `¡Hola! Gané en la Ruleta VIP 🎰%0A%0A🏆 *Premio:* ${premio}%0A🎫 *Cupón:* #${id}%0A%0AQuiero cobrarlo.`;
-            window.open(`https://wa.me{numeroTel}?text=${mensaje}`, '_blank');
-        }
+function enviarWhatsApp() {
+    // Tu número de Argentina configurado
+    var numero = "5491124050658"; 
+    
+    // Obtenemos los datos del premio
+    var valorPremio = document.getElementById('p-valor').innerText;
+    var idCupon = document.getElementById('p-id').innerText;
+    
+    // Armamos el mensaje
+    var texto = "¡Hola! Gané en la Ruleta VIP 🎰%0A%0A🏆 *Premio:* " + valorPremio + "%0A🎫 *Cupón:* #" + idCupon + "%0A%0AQuiero cobrarlo.";
+    
+    // Construimos el link final
+    var urlFinal = "https://wa.me" + numero + "?text=" + texto;
+    
+    // Abrimos WhatsApp
+    window.open(urlFinal, '_blank');
+}
     </script>
 </body>
 </html>
