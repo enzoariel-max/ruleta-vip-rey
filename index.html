@@ -32,7 +32,7 @@
             position: relative; width: 100%; max-width: 800px;
             height: 100vh; display: flex; justify-content: center; align-items: center;
         }
-
+        
         .personaje {
             position: absolute; bottom: 0; left: -80px;
             width: 380px; z-index: 500; pointer-events: none;
@@ -156,13 +156,13 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyBlaMettjLKQsDAJR2yXBVPUgySE45vMJU",
-            authDomain: "://firebaseapp.com",
-            projectId: "ruleta-promo-77112",
-            storageBucket: "ruleta-promo-77112.firebasestorage.app",
-            messagingSenderId: "470808925766",
-            appId: "1:470808925766:web:08b4980b9ada3d58175c47"
-        };
+  apiKey: "AIzaSyBlaMettjLKQsDAJR2yXBVPUgySE45vMJU",
+  authDomain: "://firebaseapp.com",
+  projectId: "ruleta-promo-77112",
+  storageBucket: "ruleta-promo-77112.firebasestorage.app",
+  messagingSenderId: "470808925766",
+  appId: "1:470808925766:web:08b4980b9ada3d58175c47"
+};
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
