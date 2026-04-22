@@ -3,41 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casino Rey VIP - Final</title>
-    <!-- Librerías de Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <title>Casino Rey VIP - Sincronizado</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
         @import url('https://googleapis.com');
         :root { --gold: #d4af37; --violeta: #8a2be2; --naranja: #ff8c00; --amarillo: #ffd700; --azul: #1e90ff; }
         
         body { margin: 0; padding: 0; height: 100vh; display: flex; justify-content: center; align-items: center; background: #111 url('fondo.jpg') no-repeat center center fixed; background-size: cover; font-family: 'Montserrat', sans-serif; overflow: hidden; }
-        
         .escena { position: relative; width: 100%; max-width: 900px; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        
-        /* EL TRUCO: pointer-events: none hace que el clic atraviese estas imágenes */
-        .personaje { position: absolute; bottom: 0; left: -50px; width: 400px; z-index: 100; pointer-events: none; filter: drop-shadow(20px 10px 30px rgba(0,0,0,0.9)); }
+        .personaje { position: absolute; bottom: 0; left: -50px; width: 380px; z-index: 100; pointer-events: none; filter: drop-shadow(20px 10px 30px rgba(0,0,0,0.9)); }
         .logo-leon { position: absolute; bottom: 20px; right: 40px; width: 100px; height: 100px; z-index: 101; border: 3px solid var(--gold); border-radius: 50%; background: black; pointer-events: none; }
-
-        .ruleta-externa { position: relative; width: 580px; height: 580px; background: radial-gradient(circle, #f9f295 0%, #d4af37 50%, #b38b2d 100%); border-radius: 50%; padding: 12px; box-shadow: 0 40px 80px rgba(0,0,0,0.8); z-index: 10; }
-        #wheel { width: 100%; height: 100%; transition: transform 6s cubic-bezier(0.15, 0, 0.15, 1); border-radius: 50%; }
-        .puntero { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 65px; z-index: 1000; pointer-events: none; }
+        .ruleta-externa { position: relative; width: 550px; height: 550px; background: radial-gradient(circle, #f9f295 0%, #d4af37 50%, #b38b2d 100%); border-radius: 50%; padding: 12px; box-shadow: 0 40px 80px rgba(0,0,0,0.8); z-index: 10; margin-top: -50px; }
         
-        /* BOTÓN CON Z-INDEX INFINITO */
-        .btn-giro { 
-            position: absolute; top: 50%; left: 50%; 
-            transform: translate(-50%, -50%); 
-            width: 120px; height: 120px; 
-            background: #000; border: 5px solid var(--gold); border-radius: 50%; 
-            color: gold; font-size: 20px; font-weight: 900; 
-            cursor: pointer; z-index: 9999 !important; 
-            box-shadow: 0 0 30px gold; 
-        }
+        /* Flecha indicadora arriba */
+        .puntero { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 65px; z-index: 1000; pointer-events: none; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+        
+        #wheel { width: 100%; height: 100%; transition: transform 6s cubic-bezier(0.15, 0, 0.15, 1); border-radius: 50%; }
+        
+        .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 110px; height: 110px; background: #000; border: 5px solid var(--gold); border-radius: 50%; color: gold; font-size: 16px; font-weight: 900; cursor: pointer; z-index: 5000 !important; box-shadow: 0 0 30px gold; }
         .btn-giro:disabled { opacity: 0.5; filter: grayscale(1); }
 
         .texto-premio { fill: white; font-size: 5.2px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #000; stroke-width: 1.2px; }
 
-        .ticket { position: absolute; bottom: 40px; width: 360px; background: white url('https://transparenttextures.com'); color: #111; padding: 25px; border-radius: 20px; text-align: center; border: 5px solid var(--gold); box-shadow: 0 30px 60px rgba(0,0,0,0.9); display: none; z-index: 8000; }
+        /* CUPÓN CON ESTRELLAS Y BORDE DORADO */
+        .ticket { 
+            position: absolute; bottom: 40px; width: 360px; 
+            background: white url('https://transparenttextures.com'); 
+            color: #111; padding: 25px; border-radius: 20px; text-align: center; 
+            border: 6px solid var(--gold); 
+            box-shadow: 0 30px 70px rgba(0,0,0,1); 
+            display: none; z-index: 6000; 
+        }
+        .ticket h2 { margin: 0; font-size: 55px; color: #111; }
+        .ticket p { margin: 10px 0; font-size: 18px; font-weight: bold; border-top: 1px dashed var(--gold); padding-top: 10px; }
     </style>
 </head>
 <body>
@@ -48,30 +47,31 @@
             <svg class="puntero" viewBox="0 0 100 100"><path d="M50 100 L100 0 L0 0 Z" fill="#fff" /></svg>
             <div id="wheel">
                 <svg viewBox="0 0 100 100">
-                    <path d="M50 50 L100 50 A50 50 0 0 1 85.3 85.3 Z" fill="var(--violeta)" />
-                    <path d="M50 50 L85.3 85.3 A50 50 0 0 1 50 100 Z" fill="var(--naranja)" />
-                    <path d="M50 50 L50 100 A50 50 0 0 1 14.7 85.3 Z" fill="var(--amarillo)" />
-                    <path d="M50 50 L14.7 85.3 A50 50 0 0 1 0 50 Z" fill="var(--azul)" />
-                    <path d="M50 50 L0 50 A50 50 0 0 1 14.7 14.7 Z" fill="var(--violeta)" />
-                    <path d="M50 50 L14.7 14.7 A50 50 0 0 1 50 0 Z" fill="var(--naranja)" />
-                    <path d="M50 50 L50 0 A50 50 0 0 1 85.3 14.7 Z" fill="var(--amarillo)" />
-                    <path d="M50 50 L85.3 14.7 A50 50 0 0 1 100 50 Z" fill="var(--azul)" />
+                    <!-- Segmentos (Giran 45 grados cada uno) -->
+                    <path d="M50 50 L50 0 A50 50 0 0 1 85.3 14.7 Z" fill="var(--naranja)" />
+                    <path d="M50 50 L85.3 14.7 A50 50 0 0 1 100 50 Z" fill="var(--amarillo)" />
+                    <path d="M50 50 L100 50 A50 50 0 0 1 85.3 85.3 Z" fill="var(--azul)" />
+                    <path d="M50 50 L85.3 85.3 A50 50 0 0 1 50 100 Z" fill="var(--violeta)" />
+                    <path d="M50 50 L50 100 A50 50 0 0 1 14.7 85.3 Z" fill="var(--naranja)" />
+                    <path d="M50 50 L14.7 85.3 A50 50 0 0 1 0 50 Z" fill="var(--amarillo)" />
+                    <path d="M50 50 L0 50 A50 50 0 0 1 14.7 14.7 Z" fill="var(--azul)" />
+                    <path d="M50 50 L14.7 14.7 A50 50 0 0 1 50 0 Z" fill="var(--violeta)" />
                     
-                    <text x="77" y="68" class="texto-premio" transform="rotate(22.5, 77, 68)">$500</text>
-                    <text x="58" y="81" class="texto-premio" transform="rotate(67.5, 58, 81)">10%</text>
-                    <text x="31" y="81" class="texto-premio" transform="rotate(112.5, 31, 81)">$1000</text>
-                    <text x="14" y="68" class="texto-premio" transform="rotate(157.5, 14, 68)">15%</text>
-                    <text x="23" y="32" class="texto-premio" transform="rotate(202.5, 23, 32)">$500</text>
-                    <text x="42" y="19" class="texto-premio" transform="rotate(247.5, 42, 19)">10%</text>
-                    <text x="69" y="19" class="texto-premio" transform="rotate(292.5, 69, 19)">$2000</text>
-                    <text x="86" y="32" class="texto-premio" transform="rotate(337.5, 86, 32)">20%</text>
+                    <!-- Textos corregidos para alinearse con la lista JS -->
+                    <text x="68" y="18" class="texto-premio" transform="rotate(22.5, 68, 18)">10%</text>
+                    <text x="88" y="38" class="texto-premio" transform="rotate(67.5, 88, 38)">$1000</text>
+                    <text x="88" y="65" class="texto-premio" transform="rotate(112.5, 88, 65)">15%</text>
+                    <text x="68" y="86" class="texto-premio" transform="rotate(157.5, 68, 86)">$500</text>
+                    <text x="35" y="86" class="texto-premio" transform="rotate(202.5, 35, 86)">20%</text>
+                    <text x="13" y="65" class="texto-premio" transform="rotate(247.5, 13, 65)">$2000</text>
+                    <text x="13" y="38" class="texto-premio" transform="rotate(292.5, 13, 38)">10%</text>
+                    <text x="35" y="18" class="texto-premio" transform="rotate(337.5, 35, 18)">$500</text>
                 </svg>
             </div>
-            <!-- Onclick directo en el HTML para asegurar la activación -->
             <button class="btn-giro" id="btnFinal" onclick="girarRuleta()">GIRAR</button>
         </div>
         <div id="ticket" class="ticket">
-            <h2 id="p-valor" style="font-size: 55px; margin:0;">---</h2>
+            <h2 id="p-valor">---</h2>
             <p>ID DE CUPÓN: #<span id="p-id">0000</span></p>
             <small id="p-fecha"></small>
         </div>
@@ -79,59 +79,63 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyB3CWqVqfX3fW7EOk_uqwZCkbowHZSdRFs",
+            apiKey: "AIzaSyBlaMettjLKQsDAJR2yXBVPUgySE45vMJU",
             authDomain: "ruleta-rey-v2.firebaseapp.com",
             projectId: "ruleta-rey-v2",
             storageBucket: "ruleta-rey-v2.firebasestorage.app",
-            messagingSenderId: "925607172632",
+            messagingSenderId: "470808925766",
             appId: "1:925607172632:web:7f4b59dc96637c3aed416d"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        const btn = document.getElementById('btnFinal');
-        const wheel = document.getElementById('wheel');
-        const prizes = ["20%", "$2000", "10%", "$500", "15%", "$1000", "10%", "$500"];
-        let rot = 0;
+        // ORDEN DE PREMIOS (Mismo que el visual para sincronizar flecha arriba)
+        const prizes = ["10%", "$1000", "15%", "$500", "20%", "$2000", "10%", "$500"];
+        let totalRot = 0;
 
-        // Versión de seguridad - Cámbiala a v17 para probar tú de nuevo
-        const VERSION = "REINTENTO_V16_FINAL"; 
-
+        // Versión de reset: cambia el v20 por v21 para volver a probar tú mismo
+        const VERSION = "V20_ESTRELLAS_FIX"; 
         if (localStorage.getItem(VERSION)) {
-            btn.disabled = true;
-            btn.innerText = "USADO";
+            document.getElementById('btnFinal').disabled = true;
+            document.getElementById('btnFinal').innerText = "USADO";
         }
 
         function girarRuleta() {
             if (localStorage.getItem(VERSION)) return;
-            
-            // 1. ARRANCAR GIRO AL INSTANTE
-            btn.disabled = true;
+            document.getElementById('btnFinal').disabled = true;
+
+            // 1. Elegir ganador
             const winnerIndex = Math.floor(Math.random() * prizes.length);
-            const winner = prizes[winnerIndex];
+            const winnerValue = prizes[winnerIndex];
+
+            // 2. Calcular rotación para que el premio caiga BAJO LA FLECHA (arriba)
+            // Se usa rotación horaria: (Vueltas) - (Ángulo del índice) - (Compensación de centro de cuña)
+            const vueltas = 10;
+            const degPorCuña = 360 / prizes.length; // 45deg
+            const compensacion = degPorCuña / 2;
             
-            rot += (360 * 10) + (winnerIndex * 45);
-            wheel.style.transform = "rotate(" + rot + "deg)";
+            // La magia: Restamos el ángulo del premio para traerlo al 0 (arriba)
+            totalRot += (vueltas * 360) - (winnerIndex * degPorCuña) - compensacion;
             
-            // Bloqueo de sesión
+            document.getElementById('wheel').style.transform = `rotate(${totalRot}deg)`;
             localStorage.setItem(VERSION, 'true');
 
-            // 2. PROCESAR FIREBASE EN SEGUNDO PLANO
+            // 3. Firebase y Ticket
             setTimeout(async () => {
-                let finalID = 0;
+                let nextID = 1;
                 try {
                     const counterRef = db.collection('config').doc('counter');
-                    finalID = await db.runTransaction(async (t) => {
+                    nextID = await db.runTransaction(async (t) => {
                         const d = await t.get(counterRef);
-                        const nv = (d.exists ? d.data().value : 0) + 1;
-                        t.set(counterRef, { value: nv });
-                        return nv;
+                        const val = (d.exists ? d.data().value : 0) + 1;
+                        t.set(counterRef, { value: val });
+                        return val;
                     });
-                    await db.collection("jugadores").add({ premio: winner, idCupon: finalID, fecha: new Date().toISOString() });
-                } catch(e) { finalID = Math.floor(Math.random() * 500); }
+                    await db.collection("jugadores").add({ premio: winnerValue, idCupon: nextID, fecha: new Date().toISOString() });
+                } catch(e) { nextID = Math.floor(Math.random() * 99); }
 
-                document.getElementById('p-valor').innerText = winner;
-                document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
+                document.getElementById('p-valor').innerText = winnerValue;
+                document.getElementById('p-id').innerText = nextID.toString().padStart(4, '0');
                 document.getElementById('p-fecha').innerText = new Date().toLocaleString();
                 document.getElementById('ticket').style.display = "block";
             }, 6200);
