@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casino Rey VIP - Premium</title>
-    <!-- Librerías estables de Firebase -->
+    <title>Casino Rey VIP - Final</title>
+    <!-- Librerías de Firebase -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
     <style>
@@ -12,29 +12,32 @@
         :root { --gold: #d4af37; --violeta: #8a2be2; --naranja: #ff8c00; --amarillo: #ffd700; --azul: #1e90ff; }
         
         body { margin: 0; padding: 0; height: 100vh; display: flex; justify-content: center; align-items: center; background: #111 url('fondo.jpg') no-repeat center center fixed; background-size: cover; font-family: 'Montserrat', sans-serif; overflow: hidden; }
+        
         .escena { position: relative; width: 100%; max-width: 900px; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .personaje { position: absolute; bottom: 0; left: -50px; width: 380px; z-index: 100; pointer-events: none; filter: drop-shadow(20px 10px 30px rgba(0,0,0,0.9)); }
-        .logo-leon { position: absolute; bottom: 20px; right: 40px; width: 100px; height: 100px; z-index: 101; border: 3px solid var(--gold); border-radius: 50%; background: black; object-fit: contain; }
+        
+        /* EL TRUCO: pointer-events: none hace que el clic atraviese estas imágenes */
+        .personaje { position: absolute; bottom: 0; left: -50px; width: 400px; z-index: 100; pointer-events: none; filter: drop-shadow(20px 10px 30px rgba(0,0,0,0.9)); }
+        .logo-leon { position: absolute; bottom: 20px; right: 40px; width: 100px; height: 100px; z-index: 101; border: 3px solid var(--gold); border-radius: 50%; background: black; pointer-events: none; }
 
-        /* RULETA GRANDE */
-        .ruleta-externa { position: relative; width: 550px; height: 550px; background: radial-gradient(circle, #f9f295 0%, #d4af37 50%, #b38b2d 100%); border-radius: 50%; padding: 12px; box-shadow: 0 40px 80px rgba(0,0,0,0.8); z-index: 10; margin-top: -50px; }
+        .ruleta-externa { position: relative; width: 580px; height: 580px; background: radial-gradient(circle, #f9f295 0%, #d4af37 50%, #b38b2d 100%); border-radius: 50%; padding: 12px; box-shadow: 0 40px 80px rgba(0,0,0,0.8); z-index: 10; }
         #wheel { width: 100%; height: 100%; transition: transform 6s cubic-bezier(0.15, 0, 0.15, 1); border-radius: 50%; }
         .puntero { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 65px; z-index: 1000; pointer-events: none; }
         
-        /* BOTÓN CON PRIORIDAD MÁXIMA */
-        .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 110px; height: 110px; background: #000; border: 5px solid var(--gold); border-radius: 50%; color: gold; font-size: 18px; font-weight: 900; cursor: pointer; z-index: 5000 !important; box-shadow: 0 0 30px gold; }
+        /* BOTÓN CON Z-INDEX INFINITO */
+        .btn-giro { 
+            position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 120px; height: 120px; 
+            background: #000; border: 5px solid var(--gold); border-radius: 50%; 
+            color: gold; font-size: 20px; font-weight: 900; 
+            cursor: pointer; z-index: 9999 !important; 
+            box-shadow: 0 0 30px gold; 
+        }
         .btn-giro:disabled { opacity: 0.5; filter: grayscale(1); }
 
         .texto-premio { fill: white; font-size: 5.2px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #000; stroke-width: 1.2px; }
 
-        /* TICKET PREMIUM */
-        .ticket { 
-            position: absolute; bottom: 40px; width: 360px; 
-            background: white url('https://transparenttextures.com'); 
-            color: #111; padding: 25px; border-radius: 20px; text-align: center; 
-            border: 5px solid var(--gold); box-shadow: 0 30px 60px rgba(0,0,0,0.9); 
-            display: none; z-index: 6000; 
-        }
+        .ticket { position: absolute; bottom: 40px; width: 360px; background: white url('https://transparenttextures.com'); color: #111; padding: 25px; border-radius: 20px; text-align: center; border: 5px solid var(--gold); box-shadow: 0 30px 60px rgba(0,0,0,0.9); display: none; z-index: 8000; }
     </style>
 </head>
 <body>
@@ -64,10 +67,11 @@
                     <text x="86" y="32" class="texto-premio" transform="rotate(337.5, 86, 32)">20%</text>
                 </svg>
             </div>
-            <button class="btn-giro" id="btnFinal">GIRAR</button>
+            <!-- Onclick directo en el HTML para asegurar la activación -->
+            <button class="btn-giro" id="btnFinal" onclick="girarRuleta()">GIRAR</button>
         </div>
         <div id="ticket" class="ticket">
-            <h2 id="p-valor" style="font-size: 50px; margin:0;">---</h2>
+            <h2 id="p-valor" style="font-size: 55px; margin:0;">---</h2>
             <p>ID DE CUPÓN: #<span id="p-id">0000</span></p>
             <small id="p-fecha"></small>
         </div>
@@ -86,29 +90,31 @@
         const db = firebase.firestore();
 
         const btn = document.getElementById('btnFinal');
-        // Lista sincronizada perfectamente con los segmentos
+        const wheel = document.getElementById('wheel');
         const prizes = ["20%", "$2000", "10%", "$500", "15%", "$1000", "10%", "$500"];
         let rot = 0;
 
-        // VERSIÓN DE RESET - Cámbiala para probar tú de nuevo
-        const VERSION_ACTUAL = "VERSION_FINAL_V15"; 
+        // Versión de seguridad - Cámbiala a v17 para probar tú de nuevo
+        const VERSION = "REINTENTO_V16_FINAL"; 
 
-        if (localStorage.getItem(VERSION_ACTUAL)) {
+        if (localStorage.getItem(VERSION)) {
             btn.disabled = true;
             btn.innerText = "USADO";
         }
 
-        btn.onclick = function() {
-            if (localStorage.getItem(VERSION_ACTUAL)) return;
+        function girarRuleta() {
+            if (localStorage.getItem(VERSION)) return;
             
-            // 1. GIRAR AL INSTANTE
+            // 1. ARRANCAR GIRO AL INSTANTE
             btn.disabled = true;
             const winnerIndex = Math.floor(Math.random() * prizes.length);
             const winner = prizes[winnerIndex];
             
             rot += (360 * 10) + (winnerIndex * 45);
-            document.getElementById('wheel').style.transform = `rotate(${rot}deg)`;
-            localStorage.setItem(VERSION_ACTUAL, 'true');
+            wheel.style.transform = "rotate(" + rot + "deg)";
+            
+            // Bloqueo de sesión
+            localStorage.setItem(VERSION, 'true');
 
             // 2. PROCESAR FIREBASE EN SEGUNDO PLANO
             setTimeout(async () => {
@@ -122,16 +128,14 @@
                         return nv;
                     });
                     await db.collection("jugadores").add({ premio: winner, idCupon: finalID, fecha: new Date().toISOString() });
-                } catch(e) { 
-                    finalID = Math.floor(Math.random() * 999);
-                }
+                } catch(e) { finalID = Math.floor(Math.random() * 500); }
 
                 document.getElementById('p-valor').innerText = winner;
                 document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
                 document.getElementById('p-fecha').innerText = new Date().toLocaleString();
                 document.getElementById('ticket').style.display = "block";
             }, 6200);
-        };
+        }
     </script>
 </body>
 </html>
