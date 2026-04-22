@@ -3,54 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Casino Rey VIP - Mobile Ready</title>
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
+    <title>Casino Rey VIP - Premium Mobile</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
         @import url('https://googleapis.com');
         :root { --gold: #d4af37; --violeta: #8a2be2; --naranja: #ff8c00; --amarillo: #ffd700; --azul: #1e90ff; }
         
         body { margin: 0; padding: 0; height: 100vh; display: flex; justify-content: center; align-items: center; background: #111 url('fondo.jpg') no-repeat center center fixed; background-size: cover; font-family: 'Montserrat', sans-serif; overflow: hidden; }
         
-        /* Contenedor Adaptable */
-        .escena { position: relative; width: 100%; max-width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .escena { position: relative; width: 100%; max-width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* PERSONAJE: Se ajusta en el móvil */
-        .personaje { position: absolute; bottom: 0; left: -30px; width: 350px; z-index: 100; pointer-events: none; filter: drop-shadow(15px 10px 20px rgba(0,0,0,0.9)); transition: all 0.3s; }
+        /* PERSONAJE: Color sólido y más grande */
+        .personaje { 
+            position: absolute; bottom: 0; left: -60px; 
+            width: 420px; z-index: 100; opacity: 1 !important;
+            pointer-events: none; filter: drop-shadow(15px 10px 25px rgba(0,0,0,0.9)); 
+            transition: all 0.3s; 
+        }
         
-        .logo-leon { position: absolute; bottom: 15px; right: 15px; width: 70px; height: 70px; z-index: 101; border: 2px solid var(--gold); border-radius: 50%; background: black; pointer-events: none; }
+        /* LOGO: Más arriba y más grande */
+        .logo-leon { 
+            position: absolute; bottom: 40px; right: 20px; 
+            width: 90px; height: 90px; z-index: 101; 
+            border: 3px solid var(--gold); border-radius: 50%; 
+            background: black; object-fit: contain; aspect-ratio: 1/1; 
+        }
 
-        /* RULETA RESPONSIVE: Usa 'vw' para adaptarse al ancho de pantalla */
+        /* RULETA: Posicionada más arriba */
         .ruleta-externa { 
             position: relative; 
-            width: min(90vw, 520px); 
-            height: min(90vw, 520px); 
+            width: min(92vw, 550px); 
+            height: min(92vw, 550px); 
             background: radial-gradient(circle, #f9f295 0%, #d4af37 50%, #b38b2d 100%); 
-            border-radius: 50%; padding: 8px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
-            z-index: 10; margin-top: -40px; 
+            border-radius: 50%; padding: 10px; 
+            box-shadow: 0 30px 70px rgba(0,0,0,0.9); 
+            z-index: 10; margin-top: -120px; /* La subimos bastante */
         }
         
         #wheel { width: 100%; height: 100%; transition: transform 6s cubic-bezier(0.15, 0, 0.15, 1); border-radius: 50%; }
         
-        .puntero { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); width: 50px; z-index: 1000; pointer-events: none; }
+        .puntero { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 60px; z-index: 1000; pointer-events: none; }
         
-        .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85px; height: 85px; background: #000; border: 4px solid var(--gold); border-radius: 50%; color: gold; font-size: 14px; font-weight: 900; cursor: pointer; z-index: 9999 !important; box-shadow: 0 0 25px gold; }
+        .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: #000; border: 5px solid var(--gold); border-radius: 50%; color: gold; font-size: 16px; font-weight: 900; cursor: pointer; z-index: 9999 !important; box-shadow: 0 0 30px gold; }
         .btn-giro:disabled { opacity: 0.5; filter: grayscale(1); }
 
-        .texto-premio { fill: white; font-size: 5.5px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #000; stroke-width: 1.2px; }
+        .texto-premio { fill: white; font-size: 5.2px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #000; stroke-width: 1.2px; }
 
-        /* TICKET ADAPTABLE */
-        .ticket { position: absolute; bottom: 30px; width: 90%; max-width: 350px; background: white url('https://transparenttextures.com'); color: #111; padding: 20px; border-radius: 20px; text-align: center; border: 4px solid var(--gold); box-shadow: 0 30px 60px rgba(0,0,0,0.9); display: none; z-index: 8000; }
-        .ticket h2 { margin: 0; font-size: 40px; color: var(--naranja); }
-        .ticket p { margin: 8px 0; font-size: 18px; font-weight: bold; }
+        /* TICKET */
+        .ticket { position: absolute; bottom: 20px; width: 92%; max-width: 380px; background: white url('https://transparenttextures.com'); color: #111; padding: 20px; border-radius: 20px; text-align: center; border: 4px solid var(--gold); box-shadow: 0 30px 80px rgba(0,0,0,1); display: none; z-index: 8000; }
+        .ticket h2 { margin: 0; font-size: 45px; color: #111; }
 
-        /* AJUSTES ESPECÍFICOS PARA CELULARES PEQUEÑOS */
+        /* AJUSTES CELULAR */
         @media (max-width: 480px) {
-            .personaje { width: 220px; left: -20px; opacity: 0.8; } /* Achicamos al chico para que no tape todo */
-            .btn-giro { width: 75px; height: 75px; font-size: 12px; }
-            .ruleta-externa { margin-top: -20px; }
-            .logo-leon { width: 50px; height: 50px; }
+            .personaje { width: 280px; left: -30px; bottom: -10px; }
+            .ruleta-externa { margin-top: -160px; width: 94vw; height: 94vw; }
+            .logo-leon { width: 80px; height: 80px; bottom: 30px; right: 15px; }
+            .btn-giro { width: 90px; height: 90px; font-size: 14px; }
+            .ticket { bottom: 10px; padding: 15px; }
+            .ticket h2 { font-size: 38px; }
         }
     </style>
 </head>
@@ -93,7 +104,7 @@
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyB3CWqVqfX3fW7EOk_uqwZCkbowHZSdRFs",
-            authDomain: "://firebaseapp.com",
+            authDomain: authDomain: "ruleta-rey-v2.firebaseapp.com",
             projectId: "ruleta-rey-v2",
             storageBucket: "ruleta-rey-v2.firebasestorage.app",
             messagingSenderId: "925607172632",
@@ -104,12 +115,11 @@
 
         const btn = document.getElementById('btnFinal');
         const wheel = document.getElementById('wheel');
-        // Lista sincronizada con la flecha arriba (sentido antihorario interno)
         const prizes = ["20%", "$2000", "10%", "$500", "15%", "$1000", "10%", "$500"];
         let rot = 0;
 
-        // CAMBIA ESTO PARA RESETEAR A TODOS LOS CLIENTES
-        const VERSION = "VERSION_FINAL_MOBILE_V1"; 
+        // VERSIÓN PARA RESETEAR TUS PRUEBAS (Cámbiala para volver a girar)
+        const VERSION = "REINTENTO_MOBILE_FIX_V2"; 
 
         if (localStorage.getItem(VERSION)) {
             btn.disabled = true;
@@ -138,7 +148,7 @@
                         return nv;
                     });
                     await db.collection("jugadores").add({ premio: winner, idCupon: finalID, fecha: new Date().toISOString() });
-                } catch(e) { finalID = Math.floor(Math.random() * 500); }
+                } catch(e) { finalID = Math.floor(Math.random() * 999); }
 
                 document.getElementById('p-valor').innerText = winner;
                 document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
