@@ -77,75 +77,85 @@
         </div>
     </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBlaMettjLKQsDAJR2yXBVPUgySE45vMJU",
-            authDomain: "://firebaseapp.com",
-            projectId: "ruleta-promo-77112",
-            storageBucket: "ruleta-promo-77112.firebasestorage.app",
-            messagingSenderId: "470808925766",
-            appId: "1:470808925766:web:08b4980b9ada3d58175c47"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBlaMettjLKQsDAJR2yXBVPUgySE45vMJU",
+        authDomain: "://firebaseapp.com",
+        projectId: "ruleta-promo-77112",
+        storageBucket: "ruleta-promo-77112.firebasestorage.app",
+        messagingSenderId: "470808925766",
+        appId: "1:470808925766:web:08b4980b9ada3d58175c47"
+    };
 
-        const btn = document.getElementById('btnFinal');
-        const prizes = ["500", "10%", "$1000", "15%", "500", "10%", "$2000", "20%"];
-        let rot = 0;
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        // VERIFICAR SI YA JUGÓ
-        if (localStorage.getItem('yaJugo_V1')) {
-            btn.disabled = true;
-            btn.innerText = "USADO";
-        }
+    const btn = document.getElementById('btnFinal');
+    const prizes = ["500", "10%", "$1000", "15%", "500", "10%", "$2000", "20%"];
+    let rot = 0;
 
-        async function obtenerSiguienteID() {
+    // Verificar si ya jugó en este navegador
+    if (localStorage.getItem('yaJugo_PROMO_V1')) {
+        btn.disabled = true;
+        btn.innerText = "USADO";
+        btn.style.opacity = "0.5";
+    }
+
+    async function obtenerSiguienteID() {
+        try {
             const counterRef = db.collection('config').doc('counter');
-            return db.runTransaction(async (transaction) => {
+            return await db.runTransaction(async (transaction) => {
                 const doc = await transaction.get(counterRef);
                 if (!doc.exists) {
                     transaction.set(counterRef, { value: 1 });
                     return 1;
                 }
-                const newValue = doc.data().value + 1;
+                const newValue = (doc.data().value || 0) + 1;
                 transaction.update(counterRef, { value: newValue });
                 return newValue;
             });
+        } catch (e) {
+            console.error("Error al obtener ID:", e);
+            return Math.floor(Math.random() * 1000); // Fallback por si falla Firebase
         }
+    }
 
-        btn.onclick = async function() {
-            if (localStorage.getItem('yaJugo_V1')) return;
-            btn.disabled = true;
+    btn.onclick = async function() {
+        if (localStorage.getItem('yaJugo_PROMO_V1')) return;
+        
+        // Arrancamos el giro inmediatamente
+        btn.disabled = true;
+        const winner = prizes[Math.floor(Math.random() * prizes.length)];
+        const index = prizes.indexOf(winner);
+        
+        rot += (360 * 10) + (360 - (45 * index));
+        document.getElementById('wheel').style.transform = "rotate(" + rot + "deg)";
+        
+        // Bloqueamos el botón para siempre en este navegador
+        localStorage.setItem('yaJugo_PROMO_V1', 'true');
 
-            // Selección de premio
-            const winner = prizes[Math.floor(Math.random() * prizes.length)];
-            const index = prizes.indexOf(winner);
+        setTimeout(async () => {
+            // Obtenemos el ID real de Firebase mientras la ruleta termina de girar
+            const nextID = await obtenerSiguienteID();
+            const now = new Date();
+
+            document.getElementById('p-valor').innerText = winner;
+            document.getElementById('p-id').innerText = nextID.toString().padStart(4, '0');
+            document.getElementById('p-fecha').innerText = now.toLocaleString();
+            document.getElementById('ticket').style.display = "block";
             
-            // Giro
-            rot += (360 * 10) + (360 - (45 * index));
-            document.getElementById('wheel').style.transform = "rotate(" + rot + "deg)";
-            
-            // Bloqueo inmediato
-            localStorage.setItem('yaJugo_V1', 'true');
-
-            setTimeout(async () => {
-                const nextID = await obtenerSiguienteID();
-                const now = new Date();
-
-                document.getElementById('p-valor').innerText = winner;
-                document.getElementById('p-id').innerText = nextID;
-                document.getElementById('p-fecha').innerText = now.toLocaleString();
-                document.getElementById('ticket').style.display = "block";
-                
-                try {
-                    await db.collection("jugadores").add({
-                        premio: winner, 
-                        idCupon: nextID, 
-                        fecha: now.toISOString() 
-                    });
-                } catch(e) { console.error("Error Firebase"); }
-            }, 6200);
-        };
-    </script>
-</body>
+            // Guardamos el registro del ganador
+            try {
+                await db.collection("jugadores").add({
+                    premio: winner,
+                    idCupon: nextID,
+                    fecha: now.toISOString(),
+                    user_agent: navigator.userAgent
+                });
+            } catch(e) {
+                console.error("Error al guardar registro:", e);
+            }
+        }, 6200);
+    };
+</script>
 </html>
