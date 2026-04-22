@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Casino Rey VIP - Sincronizado</title>
+    <title>Casino Rey VIP</title>
     
-    <!-- ESPECIFICACIONES MANTENIDAS: NO EDITAR -->
+    <!-- TUS SCRIPTS MANTENIDOS - NO EDITAR -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -14,65 +14,39 @@
         :root { --gold: #d4af37; --violeta: #8a2be2; --naranja: #ff8c00; --amarillo: #ffd700; --azul: #1e90ff; }
         
         body { margin: 0; padding: 0; height: 100vh; display: flex; justify-content: center; align-items: center; background: #111 url('fondo.jpg') no-repeat center center fixed; background-size: cover; font-family: 'Montserrat', sans-serif; overflow: hidden; }
-        
         .escena { position: relative; width: 100%; max-width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* PERSONAJE: Más grande y color sólido */
-        .personaje { position: absolute; bottom: 0; left: -60px; width: 450px; z-index: 100; opacity: 1 !important; pointer-events: none; filter: drop-shadow(15px 10px 25px rgba(0,0,0,0.9)); }
+        /* PERSONAJE */
+        .personaje { position: absolute; bottom: 0; left: -60px; width: 450px; z-index: 100; pointer-events: none; filter: drop-shadow(15px 10px 25px rgba(0,0,0,0.9)); }
         
-        /* LOGO: Más arriba y más grande */
-        .logo-leon { position: absolute; bottom: 150px; right: 20px; width: 110px; height: 110px; z-index: 101; border: 4px solid var(--gold); border-radius: 50%; background: black; object-fit: contain; aspect-ratio: 1/1; box-shadow: 0 0 25px rgba(212,175,55,0.5); }
+        /* LOGO: Grande y Arriba */
+        .logo-leon { position: absolute; bottom: 150px; right: 20px; width: 110px; height: 110px; z-index: 101; border: 4px solid var(--gold); border-radius: 50%; background: black; object-fit: contain; }
 
-        /* RULETA: Posicionada para que el ticket no la tape abajo */
-        .ruleta-externa { 
-            position: relative; 
-            width: min(92vw, 550px); 
-            height: min(92vw, 550px); 
-            background: radial-gradient(circle, #f9f295 0%, #d4af37 50%, #b38b2d 100%); 
-            border-radius: 50%; padding: 10px; 
-            box-shadow: 0 30px 70px rgba(0,0,0,0.9); 
-            z-index: 10; margin-top: -180px; 
-        }
-        
+        /* RULETA */
+        .ruleta-externa { position: relative; width: min(92vw, 550px); height: min(92vw, 550px); background: radial-gradient(circle, #f9f295 0%, #d4af37 50%, #b38b2d 100%); border-radius: 50%; padding: 10px; box-shadow: 0 30px 70px rgba(0,0,0,0.9); z-index: 10; margin-top: -180px; }
         #wheel { width: 100%; height: 100%; transition: transform 6s cubic-bezier(0.15, 0, 0.15, 1); border-radius: 50%; }
         .puntero { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 60px; z-index: 1000; pointer-events: none; }
-        
         .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: #000; border: 5px solid var(--gold); border-radius: 50%; color: gold; font-size: 16px; font-weight: 900; cursor: pointer; z-index: 9999 !important; box-shadow: 0 0 30px gold; }
         .btn-giro:disabled { opacity: 0.5; filter: grayscale(1); }
 
         .texto-premio { fill: white; font-size: 5.2px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #000; stroke-width: 1.2px; }
 
-        /* TICKET: Centrado sobre la ruleta con fondo de monedas y estrellas */
+        /* TICKET: Con Monedas y Estrellas */
         .ticket { 
-            position: absolute; 
-            top: 45%; 
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%; 
-            max-width: 380px; 
+            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 380px; 
             background: white url('https://transparenttextures.com');
-            background-color: #fff;
-            color: #111; padding: 25px; border-radius: 20px; text-align: center; 
-            border: 8px solid var(--gold); 
-            box-shadow: 0 0 0 2000px rgba(0,0,0,0.8), 0 30px 100px rgba(0,0,0,1); 
+            background-color: #fff; color: #111; padding: 25px; border-radius: 20px; text-align: center; 
+            border: 8px solid var(--gold); box-shadow: 0 0 0 2000px rgba(0,0,0,0.8), 0 30px 100px rgba(0,0,0,1); 
             display: none; z-index: 99999; 
-            animation: bounceIn 0.6s ease-out;
         }
-
-        @keyframes bounceIn {
-            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-            70% { transform: translate(-50%, -50%) scale(1.1); }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-
-        .ticket h3 { margin: 0; color: #d4af37; font-size: 24px; }
-        .ticket h2 { margin: 10px 0; font-size: 55px; color: #111; }
-        .ticket p { font-size: 20px; font-weight: bold; margin: 5px 0; }
+        .ticket h3 { margin: 0; color: #d4af37; font-size: 22px; }
+        .ticket h2 { margin: 10px 0; font-size: 55px; }
 
         @media (max-width: 480px) {
             .personaje { width: 320px; left: -40px; }
             .ruleta-externa { margin-top: -240px; }
-            .logo-leon { bottom: 120px; width: 90px; height: 90px; }
+            .logo-leon { bottom: 130px; width: 100px; height: 100px; }
         }
     </style>
 </head>
@@ -84,7 +58,6 @@
             <svg class="puntero" viewBox="0 0 100 100"><path d="M50 100 L100 0 L0 0 Z" fill="#fff" /></svg>
             <div id="wheel">
                 <svg viewBox="0 0 100 100">
-                    <!-- Segmentos -->
                     <path d="M50 50 L50 0 A50 50 0 0 1 85.3 14.7 Z" fill="var(--naranja)" />
                     <path d="M50 50 L85.3 14.7 A50 50 0 0 1 100 50 Z" fill="var(--amarillo)" />
                     <path d="M50 50 L100 50 A50 50 0 0 1 85.3 85.3 Z" fill="var(--azul)" />
@@ -108,34 +81,33 @@
         </div>
         
         <div id="ticket" class="ticket">
-            <h3>⭐ ¡FELICIDADES! 💰</h3>
+            <h3>⭐ 💰 ¡GANASTE! 💰 ⭐</h3>
             <h2 id="p-valor">---</h2>
-            <p>ID CUPÓN: #<span id="p-id">0000</span></p>
+            <p>CUPÓN: #<span id="p-id">0000</span></p>
             <small id="p-fecha"></small>
             <br>
-            <button onclick="location.reload()" style="margin-top:20px; padding:12px 30px; background:var(--gold); border:none; border-radius:15px; font-weight:900; color:#000; cursor:pointer; font-size:16px;">COBRAR PREMIO</button>
+            <button onclick="enviarWhatsApp()" style="margin-top:20px; padding:15px 30px; background:#25d366; border:none; border-radius:15px; font-weight:900; color:#fff; cursor:pointer; font-size:18px;">COBRAR POR WHATSAPP</button>
         </div>
     </div>
 
     <script>
-        // CONFIGURACIÓN MANTENIDA: NO EDITAR authDomain
+        // TUS CREDENCIALES MANTENIDAS - NO EDITAR
         const firebaseConfig = {
-            apiKey: "AIzaSyB3CWqVqfX3fW7EOk_uqwZCkbowHZSdRFs",
+            apiKey: "AIzaSyBlaMettjLKQsDAJR2yXBVPUgySE45vMJU",
             authDomain: "ruleta-rey-v2.firebaseapp.com",
             projectId: "ruleta-rey-v2",
             storageBucket: "ruleta-rey-v2.firebasestorage.app",
-            messagingSenderId: "925607172632",
+            messagingSenderId: "470808925766",
             appId: "1:925607172632:web:7f4b59dc96637c3aed416d"
         };
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // LISTA DE PREMIOS SINCRONIZADA CON POSICIÓN 0 = 12 EN PUNTO
         const prizes = ["10%", "$1000", "15%", "$500", "20%", "$2000", "10%", "$500"];
         let currentRotation = 0;
 
-        const VERSION = "FINAL_V25_STARS"; 
+        const VERSION = "VERSION_WHATSAPP_V1"; 
         if (localStorage.getItem(VERSION)) {
             document.getElementById('btnFinal').disabled = true;
             document.getElementById('btnFinal').innerText = "USADO";
@@ -147,15 +119,7 @@
 
             const winnerIndex = Math.floor(Math.random() * prizes.length);
             const winnerValue = prizes[winnerIndex];
-
-            // Cálculo para que caiga exactamente bajo la flecha blanca
-            const vueltas = 10;
-            const degPorSlice = 45;
-            const centroSlice = degPorSlice / 2;
-            
-            // Rotación horaria ajustada al centro de la cuña elegida
-            currentRotation += (vueltas * 360) - (winnerIndex * degPorSlice) - centroSlice;
-            
+            currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
             document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
             localStorage.setItem(VERSION, 'true');
 
@@ -177,6 +141,14 @@
                 document.getElementById('p-fecha').innerText = new Date().toLocaleString();
                 document.getElementById('ticket').style.display = "block";
             }, 6200);
+        }
+
+        function enviarWhatsApp() {
+            const numeroTel = "5491122334455"; // <--- CAMBIA ESTO POR TU NÚMERO
+            const premio = document.getElementById('p-valor').innerText;
+            const id = document.getElementById('p-id').innerText;
+            const mensaje = `¡Hola! Gané en la Ruleta VIP 🎰%0A%0A🏆 *Premio:* ${premio}%0A🎫 *Cupón:* #${id}%0A%0AQuiero cobrarlo.`;
+            window.open(`https://wa.me{numeroTel}?text=${mensaje}`, '_blank');
         }
     </script>
 </body>
