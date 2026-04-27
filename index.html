@@ -228,10 +228,14 @@ setTimeout(async () => {
 
     const fecha = new Date().toLocaleString();
 
+    // 🔥 MOSTRAR TICKET PRIMERO
     document.getElementById('p-valor').innerText = winnerValue;
     document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
     document.getElementById('p-fecha').innerText = fecha;
-    document.getElementById('ticket').style.display = "block";
+
+    const ticket = document.getElementById('ticket');
+    ticket.style.display = "block";
+    ticket.style.zIndex = "999999";
 
     const ticketData = {
         premio: winnerValue,
@@ -240,12 +244,14 @@ setTimeout(async () => {
     };
 
     localStorage.setItem("ticket_ruleta", JSON.stringify(ticketData));
+
+    // 🔥 DESPUÉS BLOQUEAR TODO
     localStorage.setItem(VERSION, 'true');
 
     document.getElementById('btnFinal').disabled = true;
     document.getElementById('wheel').style.pointerEvents = "none";
-}, 3000);
 
+}, 3000);
 
 // =====================
 // FUNCIONES FUERA DEL SETTIMEOUT (IMPORTANTE)
