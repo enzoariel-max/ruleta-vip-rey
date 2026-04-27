@@ -150,21 +150,16 @@
             }, 3000);
         }
 
-      function enviarWhatsApp() {
-    // Tu número de Argentina configurado
+ function enviarWhatsApp() {
     var numero = "5491124050658"; 
     
-    // Obtenemos los datos del premio
     var valorPremio = document.getElementById('p-valor').innerText;
     var idCupon = document.getElementById('p-id').innerText;
     
-    // Armamos el mensaje
-    var texto = "¡Hola! Gané en la Ruleta VIP 🎰%0A%0A🏆 *Premio:* " + valorPremio + "%0A🎫 *Cupón:* #" + idCupon + "%0A%0AQuiero cobrarlo.";
+    var texto = "¡Hola! Gané en la Ruleta VIP 🎰\n\n🏆 Premio: " + valorPremio + "\n🎫 Cupón: #" + idCupon + "\n\nQuiero cobrarlo.";
     
-    // Construimos el link final
-    var urlFinal = "https://wa.me" + numero + "?text=" + texto;
+    var urlFinal = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
     
-    // Abrimos WhatsApp
     window.open(urlFinal, '_blank');
 }
 
