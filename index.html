@@ -117,7 +117,10 @@
             if (localStorage.getItem(VERSION)) return;
             document.getElementById('btnFinal').disabled = true;
 
-            const winnerIndex = Math.floor(Math.random() * prizes.length);
+                // Lista de "tickets" en la bolsa. El 4 (20%) solo aparece una vez.
+    const bolsa = [0,0,1,1,2,2,3,3,4,5,6,6,7,7]; 
+    const randomIndex = Math.floor(Math.random() * bolsa.length);
+    const winnerIndex = bolsa[randomIndex];
             const winnerValue = prizes[winnerIndex];
             currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
             document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
@@ -140,7 +143,7 @@
                 document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
                 document.getElementById('p-fecha').innerText = new Date().toLocaleString();
                 document.getElementById('ticket').style.display = "block";
-            }, 6200);
+            }, 3000);
         }
 
       function enviarWhatsApp() {
