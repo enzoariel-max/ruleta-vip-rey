@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Casino Rey VIP</title>
+<title>Ruleta VIP</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
 
 :root { --gold: #d4af37; }
+
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -18,22 +20,23 @@ body {
     align-items: center;
     background: #000 url('fondo.jpg') center/cover no-repeat;
     font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
 }
 
-/* CONTENEDOR */
+/* RULETA CONTENEDOR RESPONSIVE */
 .ruleta-externa {
     position: relative;
-    width: 500px;
-    height: 500px;
+    width: min(90vw, 500px);
+    height: min(90vw, 500px);
     border-radius: 50%;
-    padding: 12px;
+    padding: 3%;
     background: radial-gradient(circle at 30% 30%, #f6d365, #d4af37, #8c6b1f);
     box-shadow:
         0 0 40px rgba(212,175,55,0.6),
         inset 0 0 40px rgba(0,0,0,0.8);
 }
 
-/* EFECTO BORDE */
+/* BORDE GLOW */
 .ruleta-externa::after {
     content: "";
     position: absolute;
@@ -56,38 +59,45 @@ body {
 /* TEXTO */
 .texto-premio {
     fill: #fff;
-    font-size: 5px;
     font-weight: 900;
     text-anchor: middle;
     dominant-baseline: middle;
+    font-size: 3.2px;
 }
 
-/* BOTÓN */
+@media (min-width: 600px) {
+    .texto-premio {
+        font-size: 5px;
+    }
+}
+
+/* BOTÓN RESPONSIVE */
 .btn-giro {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 110px;
-    height: 110px;
+    width: 22%;
+    height: 22%;
     border-radius: 50%;
     background: #000;
     border: 4px solid var(--gold);
     color: var(--gold);
     font-weight: 900;
     cursor: pointer;
+    font-size: clamp(12px, 3vw, 16px);
     box-shadow:
         0 0 20px rgba(212,175,55,0.7),
         inset 0 0 15px rgba(212,175,55,0.3);
 }
 
-/* PUNTERO */
+/* PUNTERO RESPONSIVE */
 .puntero {
     position: absolute;
-    top: -40px;
+    top: -8%;
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
+    width: 12%;
 }
 
 </style>
@@ -107,7 +117,6 @@ body {
     <div id="wheel">
         <svg viewBox="0 0 100 100">
 
-            <!-- SEGMENTOS -->
             <g stroke="#d4af37" stroke-width="1">
                 <path d="M50 50 L50 0 A50 50 0 0 1 85.3 14.7 Z" fill="#000"/>
                 <path d="M50 50 L85.3 14.7 A50 50 0 0 1 100 50 Z" fill="#000"/>
@@ -144,6 +153,7 @@ let rotacion = 0;
 
 function girar() {
     const index = Math.floor(Math.random() * premios.length);
+
     rotacion += 3600 - (index * 45) - 22.5;
     document.getElementById("wheel").style.transform = `rotate(${rotacion}deg)`;
 
