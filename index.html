@@ -176,6 +176,7 @@
         }
 
         function girarRuleta() {
+            if (document.getElementById('btnFinal').disabled) return;
             if (localStorage.getItem(VERSION)) return;
             document.getElementById('btnFinal').disabled = true;
 
@@ -228,6 +229,7 @@ setTimeout(async () => {
     localStorage.setItem(VERSION, 'true');
 
     document.getElementById('btnFinal').disabled = true;
+    document.getElementById('wheel').style.pointerEvents = "none";
 }, 3000);
 
 
