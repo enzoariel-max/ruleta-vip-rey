@@ -175,11 +175,22 @@
     }
 });
 
-        const VERSION = "VERSION_WHATSAPP_V7"; 
-       // if (localStorage.getItem(VERSION)) {
-        //    document.getElementById('btnFinal').disabled = true;
-       //     document.getElementById('btnFinal').innerText = "USADO";
-      //  }
+   const VERSION = "VERSION_WHATSAPP_V7";
+const LAST_VERSION = localStorage.getItem("VERSION_USED");
+
+if (LAST_VERSION !== VERSION) {
+    localStorage.removeItem("ticket_ruleta");
+
+    // limpiás versiones viejas conocidas (opcional)
+    localStorage.removeItem("VERSION_WHATSAPP_V6");
+    localStorage.removeItem("VERSION_WHATSAPP_V5");
+
+    localStorage.setItem("VERSION_USED", VERSION);
+}
+        if (localStorage.getItem(VERSION)) {
+        document.getElementById('btnFinal').disabled = true;
+         document.getElementById('btnFinal').innerText = "USADO";
+}
 
 function girarRuleta() {
     console.log("ENTRÓ A GIRAR");
