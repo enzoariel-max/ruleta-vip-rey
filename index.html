@@ -93,7 +93,7 @@
             <button onclick="enviarWhatsApp()" style="margin-top:20px; padding:15px 30px; background:#25d366; border:none; border-radius:15px; font-weight:900; color:#fff; cursor:pointer; font-size:18px;">COBRAR POR WHATSAPP</button>
         </div>
     </div>
-
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
         // TUS CREDENCIALES MANTENIDAS - NO EDITAR
         const firebaseConfig = {
@@ -111,7 +111,7 @@
         const prizes = ["10%", "$1000", "15%", "$500", "20%", "$2000", "10%", "$500"];
         let currentRotation = 0;
 
-        const VERSION = "VERSION_WHATSAPP_V3"; 
+        const VERSION = "VERSION_WHATSAPP_V4"; 
         if (localStorage.getItem(VERSION)) {
             document.getElementById('btnFinal').disabled = true;
             document.getElementById('btnFinal').innerText = "USADO";
@@ -148,19 +148,40 @@
                 document.getElementById('p-fecha').innerText = new Date().toLocaleString();
                 document.getElementById('ticket').style.display = "block";
             }, 3000);
+            function generarImagenCupon() {
+    return html2canvas(document.getElementById("ticket")).then(canvas => {
+        return canvas.toDataURL("image/png");
+    });
+}
         }
 
- function enviarWhatsApp() {
+function enviarWhatsApp() {
     var numero = "5491124050658"; 
     
     var valorPremio = document.getElementById('p-valor').innerText;
     var idCupon = document.getElementById('p-id').innerText;
-    
-    var texto = "¡Hola! Gané en la Ruleta VIP 🎰\n\n🏆 Premio: " + valorPremio + "\n🎫 Cupón: #" + idCupon + "\n\nQuiero cobrarlo.";
-    
-    var urlFinal = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
-    
-    window.open(urlFinal, '_blank');
+
+    generarImagenCupon().then(imgData => {
+
+        // 📥 Descargar imagen automáticamente
+        var link = document.createElement('a');
+        link.download = "cupon_" + idCupon + ".png";
+        link.href = imgData;
+        link.click();
+
+        // 📲 Mensaje WhatsApp
+        var texto = "🎰 CASINO REY VIP 🎰\n\n" +
+                    "Te envío mi cupón ganador 🏆\n" +
+                    "🎫 Código: #" + idCupon + "\n\n" +
+                    "Adjunto la imagen.";
+
+        var urlFinal = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
+
+        window.open(urlFinal, '_blank');
+    });
+    <p style="font-size:12px; margin-top:10px;">
+📥 Descargá tu cupón y adjuntalo en WhatsApp
+</p>
 }
 
     </script>
