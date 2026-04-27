@@ -175,19 +175,33 @@
             document.getElementById('btnFinal').innerText = "USADO";
         }
 
-        function girarRuleta() {
-            if (document.getElementById('btnFinal').disabled) return;
-            if (localStorage.getItem(VERSION)) return;
-            document.getElementById('btnFinal').disabled = true;
+       function girarRuleta() {
+    console.log("CLICK GIRAR"); // 👈 debug
 
-                // Lista de "tickets" en la bolsa. El 4 (20%) solo aparece una vez.
-    const bolsa = [0,0,1,1,2,2,3,3,4,5,6,6,7,7]; 
+    if (document.getElementById('btnFinal').disabled) return;
+    if (localStorage.getItem(VERSION)) {
+        console.log("BLOQUEADO POR VERSION");
+        return;
+    }
+
+    document.getElementById('btnFinal').disabled = true;
+
+    const bolsa = [0,0,1,1,2,2,3,3,4,5,6,6,7,7];
     const randomIndex = Math.floor(Math.random() * bolsa.length);
     const winnerIndex = bolsa[randomIndex];
-            const winnerValue = prizes[winnerIndex];
-            currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
-            document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
-            localStorage.setItem(VERSION, 'true');
+    const winnerValue = prizes[winnerIndex];
+
+    console.log("WINNER:", winnerValue);
+
+    currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
+
+    document.getElementById('wheel').style.transition = "transform 6s cubic-bezier(0.15, 0, 0.15, 1)";
+    document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
+
+    setTimeout(() => {
+        console.log("FIN GIRO");
+    }, 6000);
+}
 
 setTimeout(async () => {
     let finalID = 0;
