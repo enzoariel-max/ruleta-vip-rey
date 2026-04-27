@@ -188,6 +188,8 @@ function girarRuleta() {
     const winnerIndex = bolsa[randomIndex];
     const winnerValue = prizes[winnerIndex];
 
+    console.log("WINNER:", winnerValue);
+
     currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
     document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
 
@@ -233,10 +235,8 @@ function girarRuleta() {
         localStorage.setItem("ticket_ruleta", JSON.stringify(ticketData));
         localStorage.setItem(VERSION, 'true');
 
-        document.getElementById('btnFinal').disabled = true;
         document.getElementById('wheel').style.pointerEvents = "none";
-
-    }, 6000); // 👈 importante: mismo tiempo que la animación
+    }, 6000);
 }
     setTimeout(() => {
         console.log("FIN GIRO");
