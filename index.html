@@ -153,6 +153,7 @@
                 document.getElementById('p-fecha').innerText = new Date().toLocaleString();
                 document.getElementById('ticket').style.display = "block";
             }, 3000);
+        }
 function generarImagenCupon() {
     return html2canvas(document.getElementById("ticket")).then(canvas => {
         return canvas.toDataURL("image/png");
@@ -182,9 +183,6 @@ function enviarWhatsApp() {
 
         window.open(urlFinal, '_blank');
     });
-    <p style="font-size:12px; margin-top:10px;">
-📥 Descargá tu cupón y adjuntalo en WhatsApp
-</p>
 }
 
     </script>
