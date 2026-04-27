@@ -197,8 +197,10 @@ function girarRuleta() {
 
     console.log("WINNER:", winnerValue);
 
-    currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
-  currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
+    const segmentAngle = 360 / 8;
+const offset = segmentAngle / 2;
+
+currentRotation += (10 * 360) - (winnerIndex * segmentAngle) - offset;
 document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
 
     setTimeout(async () => {
