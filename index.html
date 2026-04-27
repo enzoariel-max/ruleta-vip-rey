@@ -214,7 +214,10 @@ const ticketData = {
     fecha: fecha
 };
 
-localStorage.setItem("ticket_ruleta", JSON.stringify(ticketData));
+  localStorage.setItem("ticket_ruleta", JSON.stringify(ticketData));
+
+}, 3000);
+            
 function generarImagenCupon() {
     return html2canvas(document.getElementById("ticket")).then(canvas => {
         return canvas.toDataURL("image/png");
