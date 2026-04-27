@@ -43,7 +43,13 @@
             border: 4px solid #5c4b13;
         }
 
-        #wheel { width: 100%; height: 100%; transition: transform 6s cubic-bezier(0.15, 0, 0.15, 1); border-radius: 50%; }
+       #wheel { 
+    width: 100%; 
+    height: 100%; 
+    transition: transform 6s cubic-bezier(0.15, 0, 0.15, 1); 
+    border-radius: 50%;
+    transform-origin: center center;
+}
         
         /* PUNTERO MEJORADO */
         .puntero { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); width: 60px; z-index: 1000; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
@@ -170,10 +176,10 @@
 });
 
         const VERSION = "VERSION_WHATSAPP_V6"; 
-        if (localStorage.getItem(VERSION)) {
-            document.getElementById('btnFinal').disabled = true;
-            document.getElementById('btnFinal').innerText = "USADO";
-        }
+       // if (localStorage.getItem(VERSION)) {
+        //    document.getElementById('btnFinal').disabled = true;
+       //     document.getElementById('btnFinal').innerText = "USADO";
+      //  }
 
 function girarRuleta() {
     console.log("ENTRÓ A GIRAR");
@@ -192,7 +198,7 @@ function girarRuleta() {
     console.log("WINNER:", winnerValue);
 
     currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
-    document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
+    document.getElementById('wheel').style.transform = "rotate(360deg)";
 
     setTimeout(async () => {
         let finalID = 0;
