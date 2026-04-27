@@ -188,10 +188,12 @@
             document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
             localStorage.setItem(VERSION, 'true');
 
-    setTimeout(async () => {
+setTimeout(async () => {
     let finalID = 0;
+
     try {
         const counterRef = db.collection('config').doc('counter');
+
         finalID = await db.runTransaction(async (t) => {
             const d = await t.get(counterRef);
             const nv = (d.exists ? d.data().value : 0) + 1;
@@ -205,7 +207,7 @@
             fecha: new Date().toISOString()
         });
 
-    } catch(e) {
+    } catch (e) {
         finalID = Math.floor(Math.random() * 500);
     }
 
@@ -223,9 +225,16 @@
     };
 
     localStorage.setItem("ticket_ruleta", JSON.stringify(ticketData));
+    localStorage.setItem(VERSION, 'true');
 
+    document.getElementById('btnFinal').disabled = true;
 }, 3000);
-            
+
+
+// =====================
+// FUNCIONES FUERA DEL SETTIMEOUT (IMPORTANTE)
+// =====================
+
 function generarImagenCupon() {
     return html2canvas(document.getElementById("ticket")).then(canvas => {
         return canvas.toDataURL("image/png");
