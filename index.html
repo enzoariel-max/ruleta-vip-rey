@@ -188,33 +188,41 @@
             document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
             localStorage.setItem(VERSION, 'true');
 
-            setTimeout(async () => {
-                let finalID = 0;
-                try {
-                    const counterRef = db.collection('config').doc('counter');
-                    finalID = await db.runTransaction(async (t) => {
-                        const d = await t.get(counterRef);
-                        const nv = (d.exists ? d.data().value : 0) + 1;
-                        t.set(counterRef, { value: nv });
-                        return nv;
-                    });
-                    await db.collection("jugadores").add({ premio: winnerValue, idCupon: finalID, fecha: new Date().toISOString() });
-                } catch(e) { finalID = Math.floor(Math.random() * 500); }
+    setTimeout(async () => {
+    let finalID = 0;
+    try {
+        const counterRef = db.collection('config').doc('counter');
+        finalID = await db.runTransaction(async (t) => {
+            const d = await t.get(counterRef);
+            const nv = (d.exists ? d.data().value : 0) + 1;
+            t.set(counterRef, { value: nv });
+            return nv;
+        });
 
-  const fecha = new Date().toLocaleString();
+        await db.collection("jugadores").add({
+            premio: winnerValue,
+            idCupon: finalID,
+            fecha: new Date().toISOString()
+        });
 
-document.getElementById('p-valor').innerText = winnerValue;
-document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
-document.getElementById('p-fecha').innerText = fecha;
-document.getElementById('ticket').style.display = "block";
+    } catch(e) {
+        finalID = Math.floor(Math.random() * 500);
+    }
 
-const ticketData = {
-    premio: winnerValue,
-    id: finalID.toString().padStart(4, '0'),
-    fecha: fecha
-};
+    const fecha = new Date().toLocaleString();
 
-  localStorage.setItem("ticket_ruleta", JSON.stringify(ticketData));
+    document.getElementById('p-valor').innerText = winnerValue;
+    document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
+    document.getElementById('p-fecha').innerText = fecha;
+    document.getElementById('ticket').style.display = "block";
+
+    const ticketData = {
+        premio: winnerValue,
+        id: finalID.toString().padStart(4, '0'),
+        fecha: fecha
+    };
+
+    localStorage.setItem("ticket_ruleta", JSON.stringify(ticketData));
 
 }, 3000);
             
@@ -223,21 +231,18 @@ function generarImagenCupon() {
         return canvas.toDataURL("image/png");
     });
 }
+
 function enviarWhatsApp() {
     var numero = "5491124050658"; 
-    
-    var valorPremio = document.getElementById('p-valor').innerText;
     var idCupon = document.getElementById('p-id').innerText;
 
     generarImagenCupon().then(imgData => {
 
-        // 📥 Descargar imagen automáticamente
         var link = document.createElement('a');
         link.download = "cupon_" + idCupon + ".png";
         link.href = imgData;
         link.click();
 
-        // 📲 Mensaje WhatsApp
         var texto = "🎰 CASINO REY VIP 🎰\n\n" +
                     "Te envío mi cupón ganador 🏆\n" +
                     "🎫 Código: #" + idCupon + "\n\n" +
