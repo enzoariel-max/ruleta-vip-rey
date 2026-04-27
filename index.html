@@ -175,14 +175,11 @@
             document.getElementById('btnFinal').innerText = "USADO";
         }
 
-       function girarRuleta() {
-    console.log("CLICK GIRAR"); // 👈 debug
+function girarRuleta() {
+    console.log("CLICK GIRAR");
 
     if (document.getElementById('btnFinal').disabled) return;
-    if (localStorage.getItem(VERSION)) {
-        console.log("BLOQUEADO POR VERSION");
-        return;
-    }
+    if (localStorage.getItem(VERSION)) return;
 
     document.getElementById('btnFinal').disabled = true;
 
@@ -191,13 +188,56 @@
     const winnerIndex = bolsa[randomIndex];
     const winnerValue = prizes[winnerIndex];
 
-    console.log("WINNER:", winnerValue);
-
     currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
-
-    document.getElementById('wheel').style.transition = "transform 6s cubic-bezier(0.15, 0, 0.15, 1)";
     document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
 
+    setTimeout(async () => {
+        let finalID = 0;
+
+        try {
+            const counterRef = db.collection('config').doc('counter');
+
+            finalID = await db.runTransaction(async (t) => {
+                const d = await t.get(counterRef);
+                const nv = (d.exists ? d.data().value : 0) + 1;
+                t.set(counterRef, { value: nv });
+                return nv;
+            });
+
+            await db.collection("jugadores").add({
+                premio: winnerValue,
+                idCupon: finalID,
+                fecha: new Date().toISOString()
+            });
+
+        } catch (e) {
+            finalID = Math.floor(Math.random() * 500);
+        }
+
+        const fecha = new Date().toLocaleString();
+
+        document.getElementById('p-valor').innerText = winnerValue;
+        document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
+        document.getElementById('p-fecha').innerText = fecha;
+
+        const ticket = document.getElementById('ticket');
+        ticket.style.display = "block";
+        ticket.style.zIndex = "999999";
+
+        const ticketData = {
+            premio: winnerValue,
+            id: finalID.toString().padStart(4, '0'),
+            fecha: fecha
+        };
+
+        localStorage.setItem("ticket_ruleta", JSON.stringify(ticketData));
+        localStorage.setItem(VERSION, 'true');
+
+        document.getElementById('btnFinal').disabled = true;
+        document.getElementById('wheel').style.pointerEvents = "none";
+
+    }, 6000); // 👈 importante: mismo tiempo que la animación
+}
     setTimeout(() => {
         console.log("FIN GIRO");
     }, 6000);
