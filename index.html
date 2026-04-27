@@ -198,7 +198,8 @@ function girarRuleta() {
     console.log("WINNER:", winnerValue);
 
     currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
-    document.getElementById('wheel').style.transform = "rotate(360deg)";
+  currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
+document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
 
     setTimeout(async () => {
         let finalID = 0;
@@ -248,7 +249,6 @@ function girarRuleta() {
     setTimeout(() => {
         console.log("FIN GIRO");
     }, 6000);
-}
 
 setTimeout(async () => {
     let finalID = 0;
