@@ -153,6 +153,21 @@
 
         const prizes = ["10%", "$1000", "15%", "$500", "20%", "$2000", "10%", "$500"];
         let currentRotation = 0;
+        window.addEventListener("load", () => {
+    const data = localStorage.getItem("ticket_ruleta");
+
+    if (data) {
+        const ticket = JSON.parse(data);
+
+        document.getElementById('p-valor').innerText = ticket.premio;
+        document.getElementById('p-id').innerText = ticket.id;
+        document.getElementById('p-fecha').innerText = ticket.fecha;
+
+        document.getElementById('ticket').style.display = "block";
+        document.getElementById('btnFinal').disabled = true;
+        document.getElementById('btnFinal').innerText = "USADO";
+    }
+});
 
         const VERSION = "VERSION_WHATSAPP_V5"; 
         if (localStorage.getItem(VERSION)) {
@@ -186,12 +201,20 @@
                     await db.collection("jugadores").add({ premio: winnerValue, idCupon: finalID, fecha: new Date().toISOString() });
                 } catch(e) { finalID = Math.floor(Math.random() * 500); }
 
-                document.getElementById('p-valor').innerText = winnerValue;
-                document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
-                document.getElementById('p-fecha').innerText = new Date().toLocaleString();
-                document.getElementById('ticket').style.display = "block";
-            }, 3000);
-        }
+  const fecha = new Date().toLocaleString();
+
+document.getElementById('p-valor').innerText = winnerValue;
+document.getElementById('p-id').innerText = finalID.toString().padStart(4, '0');
+document.getElementById('p-fecha').innerText = fecha;
+document.getElementById('ticket').style.display = "block";
+
+const ticketData = {
+    premio: winnerValue,
+    id: finalID.toString().padStart(4, '0'),
+    fecha: fecha
+};
+
+localStorage.setItem("ticket_ruleta", JSON.stringify(ticketData));
 function generarImagenCupon() {
     return html2canvas(document.getElementById("ticket")).then(canvas => {
         return canvas.toDataURL("image/png");
