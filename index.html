@@ -1,218 +1,170 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Casino Rey VIP</title>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
-
-:root { --gold: #d4af37; }
-
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #000 url('fondo.jpg') center/cover no-repeat;
-    font-family: 'Montserrat', sans-serif;
-    overflow: hidden;
-}
-
-/* ESCENA */
-.escena {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-}
-
-/* PERSONAJE */
-.personaje {
-    position: absolute;
-    bottom: 0;
-    left: -8vw;
-    width: min(45vw, 420px);
-    z-index: 5;
-    pointer-events: none;
-}
-
-/* LOGO */
-.logo-leon {
-    position: absolute;
-    bottom: 15vh;
-    right: 4vw;
-    width: min(25vw, 160px);
-    height: min(25vw, 160px);
-    border-radius: 50%;
-    border: 4px solid var(--gold);
-    background: black;
-    object-fit: contain;
-    z-index: 6;
-}
-
-/* RULETA */
-.ruleta-externa {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Casino Rey VIP</title>
     
-    width: min(85vw, 500px);
-    height: min(85vw, 500px);
+    <!-- TUS SCRIPTS MANTENIDOS - NO EDITAR -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
 
-    border-radius: 50%;
-    padding: 3%;
-    background: radial-gradient(circle at 30% 30%, #f6d365, #d4af37, #8c6b1f);
-    box-shadow:
-        0 0 40px rgba(212,175,55,0.6),
-        inset 0 0 40px rgba(0,0,0,0.8);
+    <style>
+        /* IMPORTACIÓN CORRECTA DE FUENTE */
+        @import url('https://googleapis.com');
+        
+        :root { --gold: #d4af37; }
+        
+        body { margin: 0; padding: 0; height: 100vh; display: flex; justify-content: center; align-items: center; background: #000 url('fondo.jpg') no-repeat center center fixed; background-size: cover; font-family: 'Montserrat', sans-serif; overflow: hidden; }
+        .escena { position: relative; width: 100%; max-width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        /* PERSONAJE */
+        .personaje { position: absolute; bottom: 0; left: -60px; width: 450px; z-index: 100; pointer-events: none; filter: drop-shadow(15px 10px 25px rgba(0,0,0,0.9)); }
+        
+        /* LOGO */
+        .logo-leon { position: absolute; bottom: 150px; right: 20px; width: 180px; height: 180px; z-index: 101; border: 5px solid var(--gold); border-radius: 50%; background: black; object-fit: contain; box-shadow: 0 0 25px rgba(212, 175, 55, 0.5); }
 
-    z-index: 10;
-}
+        /* RULETA TOTAL BLACK - ESTILO IMAGEN REFERENCIA */
+        .ruleta-externa { position: relative; width: min(92vw, 550px); height: min(92vw, 550px); background: var(--gold); border-radius: 50%; padding: 10px; box-shadow: 0 30px 70px rgba(0,0,0,1); z-index: 10; margin-top: -180px; }
+        #wheel { width: 100%; height: 100%; transition: transform 3s cubic-bezier(0.15, 0, 0.15, 1); border-radius: 50%; background: #000; }
+        
+        .puntero { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 60px; z-index: 1000; pointer-events: none; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8)); }
+        
+        /* BOTÓN CENTRAL IGUAL A LA IMAGEN */
+        .btn-giro { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: #000; border: 4px solid var(--gold); border-radius: 50%; color: var(--gold); font-size: 16px; font-weight: 900; cursor: pointer; z-index: 9999 !important; box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 10px rgba(212, 175, 55, 0.2); }
+        .btn-giro:disabled { opacity: 0.5; filter: grayscale(1); }
 
-/* BORDE */
-.ruleta-externa::after {
-    content: "";
-    position: absolute;
-    inset: -5px;
-    border-radius: 50%;
-    box-shadow:
-        0 0 0 6px #d4af37,
-        0 0 25px rgba(212,175,55,0.8);
-}
+        /* TEXTO BLANCO VERTICAL */
+        .texto-premio { fill: #ffffff !important; font-size: 6px; font-weight: 900; text-anchor: middle; dominant-baseline: middle; filter: drop-shadow(1px 1px 2px rgba(0,0,0,1)); }
 
-/* RULETA INTERNA */
-#wheel {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: radial-gradient(circle, #111, #000);
-    transition: transform 3s cubic-bezier(0.15, 0, 0.15, 1);
-}
+        /* TICKET */
+        .ticket { 
+            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 380px; background-color: #fff; color: #111; padding: 25px; border-radius: 20px; text-align: center; 
+            border: 8px solid var(--gold); box-shadow: 0 0 0 2000px rgba(0,0,0,0.85), 0 30px 100px rgba(0,0,0,1); 
+            display: none; z-index: 99999; 
+        }
+        .ticket h3 { margin: 0; color: var(--gold); font-size: 22px; }
+        .ticket h2 { margin: 10px 0; font-size: 55px; }
 
-/* TEXTO (AHORA LEGIBLE) */
-.texto-premio {
-    fill: #fff;
-    font-weight: 900;
-    text-anchor: middle;
-    dominant-baseline: middle;
-    font-size: clamp(8px, 2.5vw, 14px);
-}
-
-/* BOTÓN */
-.btn-giro {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 22%;
-    height: 22%;
-    border-radius: 50%;
-    background: #000;
-    border: 4px solid var(--gold);
-    color: var(--gold);
-    font-weight: 900;
-    cursor: pointer;
-    font-size: clamp(12px, 3vw, 18px);
-    box-shadow:
-        0 0 20px rgba(212,175,55,0.7),
-        inset 0 0 15px rgba(212,175,55,0.3);
-    z-index: 20;
-}
-
-/* PUNTERO */
-.puntero {
-    position: absolute;
-    top: -8%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 12%;
-}
-
-/* AJUSTES MOBILE */
-@media (max-width: 480px) {
-    .personaje {
-        width: 55vw;
-        left: -12vw;
-    }
-
-    .logo-leon {
-        bottom: 18vh;
-        width: 22vw;
-        height: 22vw;
-    }
-}
-</style>
+        @media (max-width: 480px) {
+            .personaje { width: 320px; left: -40px; }
+            .ruleta-externa { margin-top: -240px; }
+            .logo-leon { bottom: 130px; width: 130px; height: 130px; }
+        }
+    </style>
 </head>
-
 <body>
-
-<div class="escena">
-
-    <img src="chico.png" class="personaje">
-    <img src="leon.png" class="logo-leon">
-
-    <div class="ruleta-externa">
-
-        <!-- PUNTERO -->
-        <svg class="puntero" viewBox="0 0 100 120">
-            <path d="M50 120 L90 40 L50 0 L100 40 Z" fill="#b00"/>
-            <path d="M50 120 L10 40 L50 0 L0 40 Z" fill="#f00"/>
-        </svg>
-
-        <!-- RULETA -->
-        <div id="wheel">
-            <svg viewBox="0 0 100 100">
-
-                <g stroke="#d4af37" stroke-width="1">
-                    <path d="M50 50 L50 0 A50 50 0 0 1 85.3 14.7 Z" fill="#000"/>
-                    <path d="M50 50 L85.3 14.7 A50 50 0 0 1 100 50 Z" fill="#000"/>
-                    <path d="M50 50 L100 50 A50 50 0 0 1 85.3 85.3 Z" fill="#000"/>
-                    <path d="M50 50 L85.3 85.3 A50 50 0 0 1 50 100 Z" fill="#000"/>
-                    <path d="M50 50 L50 100 A50 50 0 0 1 14.7 85.3 Z" fill="#000"/>
-                    <path d="M50 50 L14.7 85.3 A50 50 0 0 1 0 50 Z" fill="#000"/>
-                    <path d="M50 50 L0 50 A50 50 0 0 1 14.7 14.7 Z" fill="#000"/>
-                    <path d="M50 50 L14.7 14.7 A50 50 0 0 1 50 0 Z" fill="#000"/>
-                </g>
-
-                <!-- TEXTOS (MEJOR POSICIONADOS) -->
-                <text x="50" y="18" class="texto-premio" transform="rotate(22.5 50 50)">10%</text>
-                <text x="50" y="18" class="texto-premio" transform="rotate(67.5 50 50)">$1000</text>
-                <text x="50" y="18" class="texto-premio" transform="rotate(112.5 50 50)">15%</text>
-                <text x="50" y="18" class="texto-premio" transform="rotate(157.5 50 50)">$500</text>
-                <text x="50" y="18" class="texto-premio" transform="rotate(202.5 50 50)">20%</text>
-                <text x="50" y="18" class="texto-premio" transform="rotate(247.5 50 50)">$2000</text>
-                <text x="50" y="18" class="texto-premio" transform="rotate(292.5 50 50)">10%</text>
-                <text x="50" y="18" class="texto-premio" transform="rotate(337.5 50 50)">$500</text>
-
+    <div class="escena">
+        <img src="chico.png" class="personaje">
+        <img src="leon.png" class="logo-leon">
+        <div class="ruleta-externa">
+            <!-- Puntero Diamante Rojo -->
+            <svg class="puntero" viewBox="0 0 100 120">
+                <path d="M50 120 L90 40 L50 0 L100 40 Z" fill="#b00" />
+                <path d="M50 120 L10 40 L50 0 L0 40 Z" fill="#f00" />
             </svg>
+            <div id="wheel">
+                <svg viewBox="0 0 100 100">
+                    <!-- SEGMENTOS NEGROS CON SEPARADORES DORADOS FINOS -->
+                    <path d="M50 50 L50 0 A50 50 0 0 1 85.3 14.7 Z" fill="#000" stroke="#d4af37" stroke-width="0.3" />
+                    <path d="M50 50 L85.3 14.7 A50 50 0 0 1 100 50 Z" fill="#000" stroke="#d4af37" stroke-width="0.3" />
+                    <path d="M50 50 L100 50 A50 50 0 0 1 85.3 85.3 Z" fill="#000" stroke="#d4af37" stroke-width="0.3" />
+                    <path d="M50 50 L85.3 85.3 A50 50 0 0 1 50 100 Z" fill="#000" stroke="#d4af37" stroke-width="0.3" />
+                    <path d="M50 50 L50 100 A50 50 0 0 1 14.7 85.3 Z" fill="#000" stroke="#d4af37" stroke-width="0.3" />
+                    <path d="M50 50 L14.7 85.3 A50 50 0 0 1 0 50 Z" fill="#000" stroke="#d4af37" stroke-width="0.3" />
+                    <path d="M50 50 L0 50 A50 50 0 0 1 14.7 14.7 Z" fill="#000" stroke="#d4af37" stroke-width="0.3" />
+                    <path d="M50 50 L14.7 14.7 A50 50 0 0 1 50 0 Z" fill="#000" stroke="#d4af37" stroke-width="0.3" />
+                    
+                    <!-- TEXTOS POSICIONADOS RADIALMENTE (CENTRADOS Y BLANCOS) -->
+                    <text x="50" y="22" class="texto-premio" transform="rotate(22.5, 50, 50) rotate(90, 50, 22)">10%</text>
+                    <text x="50" y="22" class="texto-premio" transform="rotate(67.5, 50, 50) rotate(90, 50, 22)">$1000</text>
+                    <text x="50" y="22" class="texto-premio" transform="rotate(112.5, 50, 50) rotate(90, 50, 22)">15%</text>
+                    <text x="50" y="22" class="texto-premio" transform="rotate(157.5, 50, 50) rotate(90, 50, 22)">$500</text>
+                    <text x="50" y="22" class="texto-premio" transform="rotate(202.5, 50, 50) rotate(90, 50, 22)">20%</text>
+                    <text x="50" y="22" class="texto-premio" transform="rotate(247.5, 50, 50) rotate(90, 50, 22)">$2000</text>
+                    <text x="50" y="22" class="texto-premio" transform="rotate(292.5, 50, 50) rotate(90, 50, 22)">10%</text>
+                    <text x="50" y="22" class="texto-premio" transform="rotate(337.5, 50, 50) rotate(90, 50, 22)">$500</text>
+                </svg>
+            </div>
+            <button class="btn-giro" id="btnFinal" onclick="girarRuleta()">GIRAR</button>
         </div>
-
-        <button class="btn-giro" onclick="girar()">GIRAR</button>
-
+        
+        <div id="ticket" class="ticket">
+            <h3>⭐ 💰 ¡GANASTE! 💰 ⭐</h3>
+            <h2 id="p-valor">---</h2>
+            <p>CUPÓN: #<span id="p-id">0000</span></p>
+            <small id="p-fecha"></small>
+            <br>
+            <button onclick="enviarWhatsApp()" style="margin-top:20px; padding:15px 30px; background:#25d366; border:none; border-radius:15px; font-weight:900; color:#fff; cursor:pointer; font-size:18px;">COBRAR POR WHATSAPP</button>
+        </div>
     </div>
 
-</div>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlaMettjLKQsDAJR2yXBVPUgySE45vMJU",
+            authDomain: "://firebaseapp.com",
+            projectId: "ruleta-rey-v2",
+            storageBucket: "ruleta-rey-v2.firebasestorage.app",
+            messagingSenderId: "470808925766",
+            appId: "1:925607172632:web:7f4b59dc96637c3aed416d"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-<script>
-const premios = ["10%", "$1000", "15%", "$500", "20%", "$2000", "10%", "$500"];
-let rotacion = 0;
+        const prizes = ["10%", "$1000", "15%", "$500", "20%", "$2000", "10%", "$500"];
+        let currentRotation = 0;
+        let premioFinal = "";
+        let cuponFinal = "";
 
-function girar() {
-    const index = Math.floor(Math.random() * premios.length);
+        const VERSION = "VERSION 22/4/2026/02"; 
+        if (localStorage.getItem(VERSION)) {
+            document.getElementById('btnFinal').disabled = true;
+            document.getElementById('btnFinal').innerText = "USADO";
+        }
 
-    rotacion += 3600 - (index * 45) - 22.5;
-    document.getElementById("wheel").style.transform = `rotate(${rotacion}deg)`;
+        function girarRuleta() {
+            if (localStorage.getItem(VERSION)) return;
+            document.getElementById('btnFinal').disabled = true;
 
-    setTimeout(() => {
-        alert("Ganaste: " + premios[index]);
-    }, 3000);
-}
-</script>
+            const bolsa = [0,0,0,1,1,1,2,2,2,3,3,3,4,5,6,6,6,7,7,7];
+            const randomIndex = Math.floor(Math.random() * bolsa.length);
+            const winnerIndex = bolsa[randomIndex];
+            premioFinal = prizes[winnerIndex];
 
+            currentRotation += (10 * 360) - (winnerIndex * 45) - 22.5;
+            document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
+            localStorage.setItem(VERSION, 'true');
+
+            setTimeout(async () => {
+                let tempID = Math.floor(Math.random() * 1000);
+                document.getElementById('p-valor').innerText = premioFinal;
+                document.getElementById('p-id').innerText = tempID;
+                document.getElementById('p-fecha').innerText = new Date().toLocaleString();
+                document.getElementById('ticket').style.display = 'block';
+
+                try {
+                    const counterRef = db.collection('config').doc('counter');
+                    const finalID = await db.runTransaction(async (t) => {
+                        const d = await t.get(counterRef);
+                        const nv = (d.exists ? d.data().value : 0) + 1;
+                        t.set(counterRef, { value: nv });
+                        return nv;
+                    });
+                    cuponFinal = finalID;
+                    document.getElementById('p-id').innerText = finalID;
+                    await db.collection("jugadores").add({ premio: premioFinal, idCupon: finalID, fecha: new Date().toISOString() });
+                } catch(e) { cuponFinal = tempID; }
+            }, 3000); 
+        }
+
+        function enviarWhatsApp() {
+            const tel = "5491100000000"; // Cambiar por número real
+            const msg = `¡Hola! Gané un premio en Casino Rey VIP.%0A%0A*Premio:* ${premioFinal}%0A*Cupón:* %23${cuponFinal}`;
+            window.open(`https://wa.me{tel}?text=${msg}`, '_blank');
+        }
+    </script>
 </body>
 </html>
+
